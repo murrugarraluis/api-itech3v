@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WarehouseSeeder::class);
         $this->call(CategorySeeder::class);
         $this->call(MarkSeeder::class);
+        $this->call(MeasureUnitSeeder::class);
     }
 }
