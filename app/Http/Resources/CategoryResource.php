@@ -2,9 +2,12 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-class WarehouseResource extends JsonResource
+class CategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,7 +17,7 @@ class WarehouseResource extends JsonResource
      */
     public function convertCode($id): string
     {
-        $prefijo = "ALM";
+        $prefijo = "CAT";
         $nroDigist= 3;
         $digits = '000';
         $number = substr($digits,0,$nroDigist-strlen($id)).$id;
@@ -26,7 +29,6 @@ class WarehouseResource extends JsonResource
             'id'=>$this->id,
             'code'=>$this->convertCode($this->id),
             'name'=>$this->name,
-            'description'=> is_null($this->description) ? 'Sin descripción' : $this->description,
-        ];
+            ];
     }
 }

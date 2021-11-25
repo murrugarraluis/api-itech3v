@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\WarehouseController;
+use App\Http\Controllers\API\{WarehouseController,CategoryController};
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::apiResource('warehouses',WarehouseController::class);
+Route::apiResource('categories',CategoryController::class);
