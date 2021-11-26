@@ -22,3 +22,5 @@ Route::apiResource('warehouses',WarehouseController::class);
 Route::apiResource('categories',CategoryController::class);
 Route::apiResource('marks',MarkController::class);
 Route::apiResource('measure-units',MeasureUnitController::class);
+Route::get('warehouses/{name}/deleted',[WarehouseController::class,'showDeleted']);
+Route::put('warehouses/{name}/restore',[WarehouseController::class,'restore']);

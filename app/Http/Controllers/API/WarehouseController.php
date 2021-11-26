@@ -70,4 +70,26 @@ class WarehouseController extends Controller
         $warehouse->delete();
         return (new WarehouseResource($warehouse))->additional(['message'=>'Almacén Eliminado']);
     }
+
+    public function showDeleted($name)
+    {
+        $warehouse = Warehouse::onlyTrashed()->where('name',$name)->first();
+        if ($warehouse){
+            return new WarehouseResource($warehouse);
+        }
+        return response()->json([
+            "errors" => ["error"=>"Recurso no encontrado"]
+        ],400);
+    }
+    public function restore($name)
+    {
+        $warehouse = Warehouse::onlyTrashed()->where('name',$name)->first();
+        if ($warehouse){
+            $warehouse->restore();
+            return (new WarehouseResource($warehouse))->additional(['message'=>'Almacén Restaurado']);
+        }
+        return response()->json([
+            "errors" => ["error"=>"Recurso no encontrado"]
+        ],400);
+    }
 }
