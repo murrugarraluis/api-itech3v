@@ -18,9 +18,14 @@ use App\Http\Controllers\API\{WarehouseController,CategoryController,MarkControl
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('warehouses/deleted',[WarehouseController::class,'indexDeleted']);
+Route::get('warehouses/deleted/{name}',[WarehouseController::class,'showDeleted']);
+Route::put('warehouses/deleted/{name}/restore',[WarehouseController::class,'restore']);
 Route::apiResource('warehouses',WarehouseController::class);
-Route::apiResource('categories',CategoryController::class);
-Route::apiResource('marks',MarkController::class);
-Route::apiResource('measure-units',MeasureUnitController::class);
-Route::get('warehouses/{name}/deleted',[WarehouseController::class,'showDeleted']);
-Route::put('warehouses/{name}/restore',[WarehouseController::class,'restore']);
+
+
+//Route::apiResource('categories',CategoryController::class);
+//Route::apiResource('marks',MarkController::class);
+//Route::apiResource('measure-units',MeasureUnitController::class);
+
+

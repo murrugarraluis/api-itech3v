@@ -23,6 +23,10 @@ class WarehouseController extends Controller
     {
         return WarehouseResource::collection(Warehouse::all());
     }
+    public function indexDeleted(): AnonymousResourceCollection
+    {
+        return WarehouseResource::collection(Warehouse::onlyTrashed()->get());
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -43,6 +47,11 @@ class WarehouseController extends Controller
      */
     public function show(Warehouse $warehouse): WarehouseResource
     {
+        return new WarehouseResource($warehouse);
+    }
+    public function showDeleted($name): WarehouseResource
+    {
+        $warehouse = Warehouse::onlyTrashed()->where('name',$name)->firstOrFail();
         return new WarehouseResource($warehouse);
     }
 
@@ -71,25 +80,10 @@ class WarehouseController extends Controller
         return (new WarehouseResource($warehouse))->additional(['message'=>'Almacén Eliminado']);
     }
 
-    public function showDeleted($name)
+    public function restore($name): WarehouseResource
     {
-        $warehouse = Warehouse::onlyTrashed()->where('name',$name)->first();
-        if ($warehouse){
-            return new WarehouseResource($warehouse);
-        }
-        return response()->json([
-            "errors" => ["error"=>"Recurso no encontrado"]
-        ],400);
-    }
-    public function restore($name)
-    {
-        $warehouse = Warehouse::onlyTrashed()->where('name',$name)->first();
-        if ($warehouse){
-            $warehouse->restore();
-            return (new WarehouseResource($warehouse))->additional(['message'=>'Almacén Restaurado']);
-        }
-        return response()->json([
-            "errors" => ["error"=>"Recurso no encontrado"]
-        ],400);
+        $warehouse = Warehouse::onlyTrashed()->where('name',$name)->firstOrFail();
+        $warehouse->restore();
+        return (new WarehouseResource($warehouse))->additional(['message'=>'Almacén Restaurado']);
     }
 }
