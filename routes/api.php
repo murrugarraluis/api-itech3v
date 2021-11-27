@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\{WarehouseController,CategoryController,MarkController,MeasureUnitController};
 
 /*
 |--------------------------------------------------------------------------
@@ -10,10 +11,31 @@ use Illuminate\Support\Facades\Route;
 |
 | Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| is assigned thpe "api" middleware group. Enjoy building your API!
 |
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::get('warehouses/deleted',[WarehouseController::class,'indexDeleted']);
+Route::get('warehouses/deleted/{name}',[WarehouseController::class,'showDeleted']);
+Route::put('warehouses/deleted/{name}/restore',[WarehouseController::class,'restore']);
+Route::apiResource('warehouses',WarehouseController::class);
+
+Route::get('categories/deleted',[CategoryController::class,'indexDeleted']);
+Route::get('categories/deleted/{name}',[CategoryController::class,'showDeleted']);
+Route::put('categories/deleted/{name}/restore',[CategoryController::class,'restore']);
+Route::apiResource('categories',CategoryController::class);
+
+Route::get('marks/deleted',[MarkController::class,'indexDeleted']);
+Route::get('marks/deleted/{name}',[MarkController::class,'showDeleted']);
+Route::put('marks/deleted/{name}/restore',[MarkController::class,'restore']);
+Route::apiResource('marks',MarkController::class);
+
+Route::get('measure-units/deleted',[MeasureUnitController::class,'indexDeleted']);
+Route::get('measure-units/deleted/{name}',[MeasureUnitController::class,'showDeleted']);
+Route::put('measure-units/deleted/{name}/restore',[MeasureUnitController::class,'restore']);
+Route::apiResource('measure-units',MeasureUnitController::class);
+
+
