@@ -23,9 +23,19 @@ Route::get('warehouses/deleted/{name}',[WarehouseController::class,'showDeleted'
 Route::put('warehouses/deleted/{name}/restore',[WarehouseController::class,'restore']);
 Route::apiResource('warehouses',WarehouseController::class);
 
-
+//Route::get('categories/deleted',[CategoryController::class,'indexDeleted']);
+//Route::get('categories/deleted/{name}',[CategoryController::class,'showDeleted']);
+//Route::put('categories/deleted/{name}/restore',[CategoryController::class,'restore']);
 //Route::apiResource('categories',CategoryController::class);
+//
+//Route::get('marks/deleted',[MarkController::class,'indexDeleted']);
+//Route::get('marks/deleted/{name}',[MarkController::class,'showDeleted']);
+//Route::put('marks/deleted/{name}/restore',[MarkController::class,'restore']);
 //Route::apiResource('marks',MarkController::class);
-//Route::apiResource('measure-units',MeasureUnitController::class);
+//
+//Route::get('measure-units/deleted',[MeasureUnitController::class,'indexDeleted']);
+//Route::get('measure-units/deleted/{name}',[MeasureUnitController::class,'showDeleted']);
+Route::put('measure-units/deleted/{name}/restore',[MeasureUnitController::class,'restore']);
+Route::apiResource('measure-units',MeasureUnitController::class);
 
 

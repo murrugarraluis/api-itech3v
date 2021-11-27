@@ -21,6 +21,10 @@ class MarkController extends Controller
     {
         return MarkResource::collection(Mark::all());
     }
+    public function indexDeleted(): AnonymousResourceCollection
+    {
+        return MarkResource::collection(Mark::onlyTrashed()->get());
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,6 +45,11 @@ class MarkController extends Controller
      */
     public function show(Mark $mark): MarkResource
     {
+        return new MarkResource($mark);
+    }
+    public function showDeleted($name): MarkResource
+    {
+        $mark = Mark::onlyTrashed()->where('name',$name)->firstOrFail();
         return new MarkResource($mark);
     }
 
@@ -67,6 +76,11 @@ class MarkController extends Controller
     {
         $mark->delete();
         return (new MarkResource($mark))->additional(['message'=>'Marca Eliminada']);
-
+    }
+    public function restore($name): MarkResource
+    {
+        $mark = Mark::onlyTrashed()->where('name',$name)->firstOrFail();
+        $mark->restore();
+        return (new MarkResource($mark))->additional(['message'=>'Marca Restaurada']);
     }
 }

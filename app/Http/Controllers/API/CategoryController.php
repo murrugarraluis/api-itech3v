@@ -21,6 +21,10 @@ class CategoryController extends Controller
     {
         return CategoryResource::collection(Category::all());
     }
+    public function indexDeleted(): AnonymousResourceCollection
+    {
+        return CategoryResource::collection(Category::onlyTrashed()->get());
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -41,6 +45,11 @@ class CategoryController extends Controller
      */
     public function show(Category $category): CategoryResource
     {
+        return new CategoryResource($category);
+    }
+    public function showDeleted($name): CategoryResource
+    {
+        $category = Category::onlyTrashed()->where('name',$name)->firstOrFail();
         return new CategoryResource($category);
     }
 
@@ -68,5 +77,11 @@ class CategoryController extends Controller
     {
         $category->delete();
         return (new CategoryResource($category))->additional(['message'=>'Almacén Eliminado']);
+    }
+    public function restore($name): CategoryResource
+    {
+        $category = Category::onlyTrashed()->where('name',$name)->firstOrFail();
+        $category->restore();
+        return (new CategoryResource($category))->additional(['message'=>'Categoria Restaurada']);
     }
 }
