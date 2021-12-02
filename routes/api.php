@@ -6,6 +6,7 @@ use App\Http\Controllers\API\{WarehouseController,
     CategoryController,
     MarkController,
     MeasureUnitController,
+    MaterialController,
     RequestController};
 
 /*
@@ -41,5 +42,10 @@ Route::get('measure-units/deleted',[MeasureUnitController::class,'indexDeleted']
 Route::get('measure-units/deleted/{name}',[MeasureUnitController::class,'showDeleted']);
 Route::put('measure-units/deleted/{name}/restore',[MeasureUnitController::class,'restore']);
 Route::apiResource('measure-units',MeasureUnitController::class);
+
+Route::get('materials/deleted',[MaterialController::class,'indexDeleted']);
+Route::get('materials/deleted/{name}',[MaterialController::class,'showDeleted']);
+Route::put('materials/deleted/{name}/restore',[MaterialController::class,'restore']);
+Route::apiResource('materials',MaterialController::class);
 
 Route::apiResource('requests',RequestController::class);
