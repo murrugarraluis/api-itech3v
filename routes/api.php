@@ -2,7 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\API\{WarehouseController,CategoryController,MarkController,MeasureUnitController};
+use App\Http\Controllers\API\{WarehouseController,
+    CategoryController,
+    MarkController,
+    MeasureUnitController,
+    RequestController};
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +42,4 @@ Route::get('measure-units/deleted/{name}',[MeasureUnitController::class,'showDel
 Route::put('measure-units/deleted/{name}/restore',[MeasureUnitController::class,'restore']);
 Route::apiResource('measure-units',MeasureUnitController::class);
 
-
+Route::apiResource('requests',RequestController::class);
