@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Material;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,5 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(MarkSeeder::class);
         $this->call(MeasureUnitSeeder::class);
+        $this->call(MaterialSeeder::class);
+        $this->call(RequestSeeder::class);
+
     }
 }

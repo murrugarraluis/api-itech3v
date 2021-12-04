@@ -148,7 +148,16 @@ return [
 
     'attributes' => [
         'name' => 'nombre',
-        'description' => 'descripción'
+        'description' => 'descripción',
+        'date_required' => 'fecha requerida',
+        'type_request' => 'tipo de requerimiento',
+        'importance' => 'importancia',
+        'materials' => 'materiales',
+
+        'category' => 'categoria',
+        'mark' => 'marca',
+        'measure_unit' => 'unidad de medida',
+
     ],
 
 ];

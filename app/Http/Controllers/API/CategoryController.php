@@ -76,7 +76,7 @@ class CategoryController extends Controller
     public function destroy(Category $category): CategoryResource
     {
         $category->delete();
-        return (new CategoryResource($category))->additional(['message'=>'Almacén Eliminado']);
+        return (new CategoryResource($category))->additional(['message'=>'Categoria Eliminada']);
     }
     public function restore($name): CategoryResource
     {
