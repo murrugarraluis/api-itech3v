@@ -14,6 +14,7 @@ class Request extends Model
         'type_request',
         'importance',
         'comment',
+        'material_id'
     ];
     protected $hidden = ['created_at','updated_at','deleted_at'];
     public function materials(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
