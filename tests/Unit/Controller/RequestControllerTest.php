@@ -18,7 +18,7 @@ class RequestControllerTest extends TestCase
 
     public function test_index()
     {
-//        $this->withExceptionHandling();
+        $this->withExceptionHandling();
         $Request = Request::factory()->create([
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
@@ -34,7 +34,9 @@ class RequestControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
 //        Agregar Producto al detalle de Requerimiento
-        $Request->materials()->attach($Material);
+        $Request->materials()->attach([
+            1 => ['quantity' =>5],
+        ]);
 
 
         $this->getJson("api/$this->uri")
@@ -61,7 +63,9 @@ class RequestControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
 //        Agregar Producto al detalle de Requerimiento
-        $Request->materials()->attach($Material);
+        $Request->materials()->attach([
+            1 => ['quantity' =>5],
+        ]);
         $this->getJson("api/$this->uri/$Request->id")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
@@ -98,7 +102,7 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'materials' => [['id' => 1,], ['id' => 2,]]
+            'materials' => [['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->postJson("api/$this->uri", $json)
             ->assertStatus(201)
@@ -134,7 +138,9 @@ class RequestControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
 //        Agregar Producto al detalle de Requerimiento
-        $Request->materials()->attach($Material);
+        $Request->materials()->attach([
+            1 => ['quantity' =>5],
+        ]);
 
         $this->deleteJson("api/$this->uri/$Request->id")
             ->assertStatus(200)

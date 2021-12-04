@@ -16,6 +16,7 @@ class CreateMaterialRequest extends Migration
         Schema::create('material_request', function (Blueprint $table) {
             $table->foreignId('material_id')->nullable()->constrained('materials');
             $table->foreignId('request_id')->nullable()->constrained('requests');
+            $table->string('quantity');
         });
     }
 

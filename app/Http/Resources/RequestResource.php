@@ -18,7 +18,7 @@ class RequestResource extends JsonResource
             'type_request' => $this->type_request,
             'importance' => $this->importance,
             'comment' => $this->comment,
-            'materials' => MaterialResource::collection($this->materials),
+            'materials' => MaterialRequestResource::collection($this->materials),
         ];
     }
 

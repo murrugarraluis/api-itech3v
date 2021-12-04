@@ -36,11 +36,9 @@ class RequestController extends Controller
             'importance'=>$request->importance,
             'comment'=>$request->comment,
         ]);
-        $materials = [];
         foreach ($request->materials as $material){
-            array_push($materials,$material['id']);
+            $requestCreate->materials()->attach($material['id'], ['quantity' => $material['quantity']]);
         }
-        $requestCreate->materials()->attach($materials);
         return (new RequestResource($requestCreate))->additional(['message'=>'Requerimiento Registrado']);
     }
 
