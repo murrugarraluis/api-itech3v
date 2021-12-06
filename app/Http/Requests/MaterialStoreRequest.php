@@ -28,7 +28,7 @@ class MaterialStoreRequest extends FormRequest
             'category' => 'required',
             'mark' => 'required',
             'measure_unit' => 'required',
-            'image'=>'required|image|dimensions:min_width=200,min_height=200'
+            'image'=>'image|dimensions:min_width=200,min_height=200'
         ];
     }
 }
