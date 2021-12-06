@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Material;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MaterialSeeder extends Seeder
 {

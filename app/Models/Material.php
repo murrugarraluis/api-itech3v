@@ -13,7 +13,7 @@ class Material extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name','image'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
