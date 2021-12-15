@@ -42,7 +42,9 @@ class MaterialController extends Controller
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
         $material->measure_unit()->associate($request->measure_unit)->save();
-        $material->warehouses()->sync($request->warehouses);
+        foreach ($request->warehouses as $warehouse){
+            $material->warehouses()->attach($warehouse['id'], ['quantity' => $warehouse['quantity']]);
+        }
         return (new MaterialResource($material))->additional(['message' => 'Material Registrado']);
 
     }
@@ -79,7 +81,10 @@ class MaterialController extends Controller
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
         $material->measure_unit()->associate($request->measure_unit)->save();
-        $material->warehouses()->sync($request->warehouses);
+        $material->warehouses()->detach();
+        foreach ($request->warehouses as $warehouse){
+            $material->warehouses()->attach($warehouse['id'], ['quantity' => $warehouse['quantity']]);
+        }
         return (new MaterialResource($material))->additional(['message' => 'Material Actualizado']);
 
     }

@@ -16,6 +16,7 @@ class CreateMaterialWarehouse extends Migration
         Schema::create('material_warehouse', function (Blueprint $table) {
             $table->foreignId('material_id')->nullable()->constrained('materials');
             $table->foreignId('warehouse_id')->nullable()->constrained('warehouses');
+            $table->string('quantity');
         });
     }
 

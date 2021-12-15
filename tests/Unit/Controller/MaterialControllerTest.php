@@ -123,7 +123,7 @@ class MaterialControllerTest extends TestCase
             'mark' => 1,
             'minimum_stock'=>10,
             'measure_unit' => 1,
-            'warehouses'=>[1,2]
+            'warehouses'=>[['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->postJson("api/$this->uri", $json)
             ->assertStatus(201)
@@ -180,7 +180,7 @@ class MaterialControllerTest extends TestCase
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
-            'warehouses'=>[1,2]
+            'warehouses'=>[['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
@@ -227,7 +227,7 @@ class MaterialControllerTest extends TestCase
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
-            'warehouses'=>[1,2]
+            'warehouses'=>[['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
