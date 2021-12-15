@@ -36,7 +36,8 @@ class MaterialController extends Controller
     public function store(MaterialStoreRequest $request): MaterialResource
     {
         $material = Material::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'minimum_stock' => $request->minimum_stock
         ]);
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
