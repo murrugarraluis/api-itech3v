@@ -41,14 +41,7 @@ class MaterialController extends Controller
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
         $material->measure_unit()->associate($request->measure_unit)->save();
-
-        if ($request->image){
-            $path = $request->image->store('public/materials');
-            $path_min = substr($path, 7, strlen($path));
-            $material->image = $path_min;
-            $material->save();
-        }
-
+        $material->warehouses()->sync($request->warehouses);
         return (new MaterialResource($material))->additional(['message' => 'Material Registrado']);
 
     }
@@ -85,13 +78,7 @@ class MaterialController extends Controller
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
         $material->measure_unit()->associate($request->measure_unit)->save();
-
-        if ($request->image){
-            $path = $request->image->store('public/materials');
-            $path_min = substr($path, 7, strlen($path));
-            $material->image = $path_min;
-            $material->save();
-        }
+        $material->warehouses()->sync($request->warehouses);
         return (new MaterialResource($material))->additional(['message' => 'Material Actualizado']);
 
     }

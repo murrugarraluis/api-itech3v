@@ -36,4 +36,8 @@ class Material extends Model
     {
         return $this->belongsToMany(Request::class);
     }
+    public function warehouses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Warehouse::class);
+    }
 }

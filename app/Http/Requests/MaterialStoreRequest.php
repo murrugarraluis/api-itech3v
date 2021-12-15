@@ -28,7 +28,7 @@ class MaterialStoreRequest extends FormRequest
             'category' => 'required',
             'mark' => 'required',
             'measure_unit' => 'required',
-            'image'=>'nullable|image'
+            'warehouses'=>'required'
         ];
     }
 }

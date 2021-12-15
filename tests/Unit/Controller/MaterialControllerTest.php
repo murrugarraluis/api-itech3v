@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Mark;
 use App\Models\Material;
 use App\Models\MeasureUnit;
+use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -104,15 +105,24 @@ class MaterialControllerTest extends TestCase
 //
     public function test_store()
     {
-//        $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
         $json = [
             'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
+            'warehouses'=>[1,2]
         ];
         $this->postJson("api/$this->uri", $json)
             ->assertStatus(201)
@@ -158,11 +168,20 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
         $json = [
-            'name' => 'Camara QHD',
+            'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
+            'warehouses'=>[1,2]
         ];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
@@ -196,11 +215,20 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
         $json = [
             'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
+            'warehouses'=>[1,2]
         ];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
@@ -236,7 +264,9 @@ class MaterialControllerTest extends TestCase
 
 
     }
-    public function test_update_validate_data_empty(){
+
+    public function test_update_validate_data_empty()
+    {
         $this->withExceptionHandling();
         $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
         $Category = Category::factory()->create(['name' => 'Camaras']);
@@ -251,8 +281,9 @@ class MaterialControllerTest extends TestCase
         $json = [];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(422)
-            ->assertJson(['message'=>'Los datos proporcionado no son válidos']);
+            ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
+
 //
     public function test_destroy()
     {

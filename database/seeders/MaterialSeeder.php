@@ -19,20 +19,24 @@ class MaterialSeeder extends Seeder
         $Material->category()->associate(1)->save();
         $Material->mark()->associate(1)->save();
         $Material->measure_unit()->associate(1)->save();
+        $Material->warehouses()->attach([1,2]);
 
         $Material = Material::create(['name' => 'Camara HD XD100']);
         $Material->category()->associate(1)->save();
         $Material->mark()->associate(1)->save();
         $Material->measure_unit()->associate(1)->save();
+        $Material->warehouses()->attach(1);
 
         $Material = Material::create(['name' => 'Camara FULL 360']);
         $Material->category()->associate(1)->save();
         $Material->mark()->associate(1)->save();
         $Material->measure_unit()->associate(1)->save();
+        $Material->warehouses()->attach(1);
 
         $Material = Material::create(['name' => 'MiniVisor HD']);
         $Material->category()->associate(1)->save();
         $Material->mark()->associate(1)->save();
         $Material->measure_unit()->associate(1)->save();
+        $Material->warehouses()->attach(1);
     }
 }

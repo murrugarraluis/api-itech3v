@@ -24,7 +24,7 @@ class MaterialResource extends JsonResource
             'category' => $this->category->name,
             'mark' => $this->mark->name,
             'measure_unit' => $this->measure_unit->name,
-            'image' => $this->image
+            'warehouses' => WarehouseResource::collection($this->warehouses),
         ];
     }
 
