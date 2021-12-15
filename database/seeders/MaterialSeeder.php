@@ -21,7 +21,7 @@ class MaterialSeeder extends Seeder
         $Material->measure_unit()->associate(1)->save();
         $Material->warehouses()->attach([
             1 => ['quantity' =>5],
-            2 => ['quantity' => 6],
+            2 => ['quantity' => 3],
         ]);
 
         $Material = Material::create(['name' => 'Camara HD XD100','minimum_stock'=>5]);
@@ -38,7 +38,7 @@ class MaterialSeeder extends Seeder
         $Material->mark()->associate(1)->save();
         $Material->measure_unit()->associate(1)->save();
         $Material->warehouses()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' =>12],
             2 => ['quantity' => 6],
         ]);
 
@@ -48,7 +48,7 @@ class MaterialSeeder extends Seeder
         $Material->measure_unit()->associate(1)->save();
         $Material->warehouses()->attach([
             1 => ['quantity' =>5],
-            2 => ['quantity' => 6],
+            2 => ['quantity' => 8],
         ]);
     }
 }
