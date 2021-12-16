@@ -153,7 +153,32 @@ class MaterialControllerTest extends TestCase
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
-
+    public function test_store_data_empty_warehouses()
+    {
+        $this->withoutExceptionHandling();
+        $Category = Category::factory()->create(['name' => 'Camaras']);
+        $Mark = Mark::factory()->create(['name' => 'Vision']);
+        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
+        $json = [
+            'name' => 'Camara QHD ZX-77HF',
+            'category' => 1,
+            'mark' => 1,
+            'minimum_stock'=>10,
+            'measure_unit' => 1,
+            'warehouses'=>[['id' => 1], ['id' => 2]]
+        ];
+        $this->postJson("api/$this->uri", $json)
+            ->assertStatus(201)
+            ->assertJson(['message' => 'Material Registrado']);
+    }
 //
     public function test_update()
     {
