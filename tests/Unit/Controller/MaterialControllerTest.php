@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Mark;
 use App\Models\Material;
 use App\Models\MeasureUnit;
+use App\Models\Warehouse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,7 +19,7 @@ class MaterialControllerTest extends TestCase
     public function test_index()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
@@ -35,7 +36,7 @@ class MaterialControllerTest extends TestCase
     public function test_index_deleted()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
@@ -53,7 +54,7 @@ class MaterialControllerTest extends TestCase
     public function test_show()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
@@ -79,7 +80,7 @@ class MaterialControllerTest extends TestCase
     public function test_show_deleted()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
@@ -104,15 +105,25 @@ class MaterialControllerTest extends TestCase
 //
     public function test_store()
     {
-//        $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
         $json = [
             'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
             'mark' => 1,
+            'minimum_stock'=>10,
             'measure_unit' => 1,
+            'warehouses'=>[['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->postJson("api/$this->uri", $json)
             ->assertStatus(201)
@@ -122,9 +133,7 @@ class MaterialControllerTest extends TestCase
     public function test_store_validate_data_unique()
     {
         $this->withExceptionHandling();
-        Material::factory()->create([
-            'name' => 'Camara QHD ZX-77HF',
-        ]);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $json = [
             'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
@@ -144,12 +153,37 @@ class MaterialControllerTest extends TestCase
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
-
+    public function test_store_data_empty_warehouses()
+    {
+        $this->withoutExceptionHandling();
+        $Category = Category::factory()->create(['name' => 'Camaras']);
+        $Mark = Mark::factory()->create(['name' => 'Vision']);
+        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
+        $json = [
+            'name' => 'Camara QHD ZX-77HF',
+            'category' => 1,
+            'mark' => 1,
+            'minimum_stock'=>10,
+            'measure_unit' => 1,
+            'warehouses'=>[['id' => 1], ['id' => 2]]
+        ];
+        $this->postJson("api/$this->uri", $json)
+            ->assertStatus(201)
+            ->assertJson(['message' => 'Material Registrado']);
+    }
 //
     public function test_update()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Category = Category::factory()->create(['name' => 'Laptops']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -158,11 +192,20 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
         $json = [
-            'name' => 'Camara QHD',
+            'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
+            'warehouses'=>[['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
@@ -187,7 +230,7 @@ class MaterialControllerTest extends TestCase
 
     public function test_update_validate_data_unique_self()
     {
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Category = Category::factory()->create(['name' => 'Laptops']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -196,11 +239,20 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $warehouse = Warehouse::factory()->create([
+            'name'=>'Almacen 02',
+            'description' => 'Breve Descripcion',
+        ]);
         $json = [
             'name' => 'Camara QHD ZX-77HF',
             'category' => 1,
             'mark' => 1,
             'measure_unit' => 1,
+            'warehouses'=>[['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
         ];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
@@ -214,12 +266,12 @@ class MaterialControllerTest extends TestCase
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
 //        Asociar Datos de Material
-        $MaterialA = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $MaterialA = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $MaterialA->category()->associate($Category)->save();
         $MaterialA->mark()->associate($Mark)->save();
         $MaterialA->measure_unit()->associate($MeasureUnit)->save();
 
-        $MaterialB = Material::factory()->create(['name' => 'Camara XYZ']);
+        $MaterialB = Material::factory()->create(['name' => 'Camara QQHD ZX-77HF','minimum_stock'=>5]);
         $MaterialB->category()->associate($Category)->save();
         $MaterialB->mark()->associate($Mark)->save();
         $MaterialB->measure_unit()->associate($MeasureUnit)->save();
@@ -236,9 +288,11 @@ class MaterialControllerTest extends TestCase
 
 
     }
-    public function test_update_validate_data_empty(){
+
+    public function test_update_validate_data_empty()
+    {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Category = Category::factory()->create(['name' => 'Laptops']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -251,13 +305,14 @@ class MaterialControllerTest extends TestCase
         $json = [];
         $this->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(422)
-            ->assertJson(['message'=>'Los datos proporcionado no son válidos']);
+            ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
+
 //
     public function test_destroy()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
@@ -287,7 +342,7 @@ class MaterialControllerTest extends TestCase
     public function test_restore()
     {
         $this->withExceptionHandling();
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF','minimum_stock'=>5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);

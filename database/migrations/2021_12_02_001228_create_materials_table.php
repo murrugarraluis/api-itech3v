@@ -19,6 +19,7 @@ class CreateMaterialsTable extends Migration
             $table->foreignId('category_id')->nullable()->constrained('categories');
             $table->foreignId('mark_id')->nullable()->constrained('marks');
             $table->foreignId('measure_unit_id')->nullable()->constrained('measure_units');
+            $table->string('minimum_stock');
             $table->timestamps();
             $table->softDeletes();
         });

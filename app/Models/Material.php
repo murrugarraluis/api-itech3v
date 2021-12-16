@@ -13,7 +13,7 @@ class Material extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name'
+        'name','minimum_stock'
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -35,5 +35,9 @@ class Material extends Model
     public function requests(): BelongsToMany
     {
         return $this->belongsToMany(Request::class);
+    }
+    public function warehouses(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Warehouse::class)->withPivot('quantity');
     }
 }

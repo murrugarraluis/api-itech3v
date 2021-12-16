@@ -24,9 +24,19 @@ class MaterialResource extends JsonResource
             'category' => $this->category->name,
             'mark' => $this->mark->name,
             'measure_unit' => $this->measure_unit->name,
+            'minimum_stock' => $this->minimum_stock,
+            'warehouses' => WarehouseMaterialResource::collection($this->warehouses),
+            'stock' => $this->stockTotal($this->warehouses),
         ];
     }
-
+    public function stockTotal($warehouses): int
+    {
+        $suma = 0;
+        foreach ($warehouses as $warehouse){
+            $suma += $warehouse->pivot->quantity;
+        }
+        return $suma;
+    }
     public function convertCode($id): string
     {
         $prefijo = "MAT";

@@ -28,6 +28,7 @@ class MaterialUpdateRequest extends FormRequest
             'category' => 'required',
             'mark' => 'required',
             'measure_unit' => 'required',
+            'warehouses'=>'required'
         ];
     }
 }

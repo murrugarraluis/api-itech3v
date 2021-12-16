@@ -24,10 +24,12 @@ class MaterialStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required|unique:materials,name',
+            'name' => 'required|unique:materials,name',
             'category' => 'required',
             'mark' => 'required',
             'measure_unit' => 'required',
+            'minimum_stock' => 'required',
+            'warehouses' => 'required'
         ];
     }
 }

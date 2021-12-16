@@ -14,4 +14,8 @@ class Warehouse extends Model
         'description',
     ];
     protected $hidden = ['created_at','updated_at','deleted_at'];
+    public function materials(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Material::class);
+    }
 }

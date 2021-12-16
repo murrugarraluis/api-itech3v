@@ -15,18 +15,19 @@ class WarehouseResource extends JsonResource
     public function convertCode($id): string
     {
         $prefijo = "ALM";
-        $nroDigist= 3;
+        $nroDigist = 3;
         $digits = '000';
-        $number = substr($digits,0,$nroDigist-strlen($id)).$id;
-        return $prefijo."-".$number;
+        $number = substr($digits, 0, $nroDigist - strlen($id)) . $id;
+        return $prefijo . "-" . $number;
     }
+
     public function toArray($request): array
     {
         return [
-            'id'=>$this->id,
-            'code'=>$this->convertCode($this->id),
-            'name'=>$this->name,
-            'description'=> is_null($this->description) ? 'Sin descripción' : $this->description,
+            'id' => $this->id,
+            'code' => $this->convertCode($this->id),
+            'name' => $this->name,
+            'description' => is_null($this->description) ? 'Sin descripción' : $this->description,
         ];
     }
 }

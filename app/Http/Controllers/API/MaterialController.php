@@ -9,6 +9,7 @@ use App\Http\Resources\MaterialResource;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use function PHPUnit\Framework\isEmpty;
 
 class MaterialController extends Controller
 {
@@ -36,11 +37,17 @@ class MaterialController extends Controller
     public function store(MaterialStoreRequest $request): MaterialResource
     {
         $material = Material::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'minimum_stock' => $request->minimum_stock
         ]);
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
         $material->measure_unit()->associate($request->measure_unit)->save();
+        foreach ($request->warehouses as $warehouse){
+            if (array_key_exists('quantity',$warehouse)){
+                $material->warehouses()->attach($warehouse['id'], ['quantity' => $warehouse['quantity']]);
+            }
+        }
         return (new MaterialResource($material))->additional(['message' => 'Material Registrado']);
 
     }
@@ -77,6 +84,12 @@ class MaterialController extends Controller
         $material->category()->associate($request->category)->save();
         $material->mark()->associate($request->mark)->save();
         $material->measure_unit()->associate($request->measure_unit)->save();
+        $material->warehouses()->detach();
+        foreach ($request->warehouses as $warehouse){
+            if (array_key_exists('quantity',$warehouse)){
+                $material->warehouses()->attach($warehouse['id'], ['quantity' => $warehouse['quantity']]);
+            }
+        }
         return (new MaterialResource($material))->additional(['message' => 'Material Actualizado']);
 
     }
