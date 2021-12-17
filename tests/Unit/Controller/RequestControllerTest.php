@@ -28,14 +28,14 @@ class RequestControllerTest extends TestCase
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
-//        Asociar Datos de Material
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+        //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-//        Agregar Producto al detalle de Requerimiento
+        //        Agregar Producto al detalle de Requerimiento
         $Request->materials()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' => 5],
         ]);
 
 
@@ -47,24 +47,24 @@ class RequestControllerTest extends TestCase
 
     public function test_show()
     {
-//        $this->withExceptionHandling();
+        //        $this->withExceptionHandling();
         $Request = Request::factory()->create([
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
         ]);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-//        Asociar Datos de Material
+        //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-//        Agregar Producto al detalle de Requerimiento
+        //        Agregar Producto al detalle de Requerimiento
         $Request->materials()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' => 5],
         ]);
         $this->getJson("api/$this->uri/$Request->id")
             ->assertStatus(200)
@@ -78,20 +78,20 @@ class RequestControllerTest extends TestCase
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
-//
-//
+    //
+    //
     public function test_store()
     {
         $this->withoutExceptionHandling();
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-        $Material = Material::factory()->create(['name' => 'Camara FULL-HD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-7e7HF', 'minimum_stock' => 5]);
         //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
@@ -102,17 +102,17 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'materials' => [['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
+            'materials' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
         $this->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Requerimiento Registrado']);
-//        $this->assertDatabaseHas("$this->uri",$json);
+        //        $this->assertDatabaseHas("$this->uri",$json);
     }
 
     public function test_store_validate_data_empty()
     {
-//        $this->withoutExceptionHandling();
+        //        $this->withoutExceptionHandling();
         $json = [];
         $this->postJson("api/$this->uri", $json)
             ->assertStatus(422)
@@ -122,24 +122,24 @@ class RequestControllerTest extends TestCase
 
     public function test_destroy()
     {
-//        $this->withExceptionHandling();
+        //        $this->withExceptionHandling();
         $Request = Request::factory()->create([
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
         ]);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-//        Asociar Datos de Material
+        //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-//        Agregar Producto al detalle de Requerimiento
+        //        Agregar Producto al detalle de Requerimiento
         $Request->materials()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' => 5],
         ]);
 
         $this->deleteJson("api/$this->uri/$Request->id")
@@ -149,12 +149,11 @@ class RequestControllerTest extends TestCase
             'id' => $Request->id,
             'deleted_at' => null
         ]);
-
     }
 
     public function test_destroy_validate_resoruce_not_exist()
     {
-//        $this->withExceptionHandling();
+        //        $this->withExceptionHandling();
         $this->deleteJson("api/$this->uri/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
