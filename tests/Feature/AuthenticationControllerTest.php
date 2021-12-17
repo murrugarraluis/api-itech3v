@@ -16,15 +16,52 @@ class AuthenticationControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_store()
+    public function login()
     {
-        $this->withoutExceptionHandling();
+        User::factory()->create([
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => bcrypt('123456'),
+        ]);
         $json = [
             'name' => 'Luis',
             'email' => 'luis17@gmail.com',
             'password' => '123456',
         ];
-        $this->postJson("api/register", $json)
+
+        $response = $this->postJson("api/login", $json);
+        $token = $response->baseResponse->original['token'];
+        $header = [
+            "Authorization" => "Bearer " . $token
+        ];
+        return $header;
+    }
+
+    public function test_store()
+    {
+        $this->withoutExceptionHandling();
+        User::factory()->create([
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => bcrypt('123456'),
+        ]);
+        $json = [
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => '123456',
+        ];
+
+        $response = $this->postJson("api/login", $json);
+        $token = $response->baseResponse->original['token'];
+        $header = [
+            "Authorization" => "Bearer " . $token
+        ];
+        $json = [
+            'name' => 'Luis',
+            'email' => 'luis@gmail.com',
+            'password' => '123456',
+        ];
+        $this->postJson("api/register", $json, $header)
             ->assertStatus(201)
             ->assertJson(['message' => 'Usuario Registrado']);
     }
@@ -40,7 +77,18 @@ class AuthenticationControllerTest extends TestCase
             'email' => 'luis17@gmail.com',
             'password' => '123456',
         ];
-        $this->postJson("api/register", $json)
+
+        $response = $this->postJson("api/login", $json);
+        $token = $response->baseResponse->original['token'];
+        $header = [
+            "Authorization" => "Bearer " . $token
+        ];
+        $json = [
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => '123456',
+        ];
+        $this->postJson("api/register", $json, $header)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }

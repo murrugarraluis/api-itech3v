@@ -7,6 +7,7 @@ use App\Models\Mark;
 use App\Models\Material;
 use App\Models\MeasureUnit;
 use App\Models\Request;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,6 +16,26 @@ class RequestControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'requests';
+    public function login()
+    {
+        User::factory()->create([
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => bcrypt('123456'),
+        ]);
+        $json = [
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => '123456',
+        ];
+
+        $response = $this->postJson("api/login", $json);
+        $token = $response->baseResponse->original['token'];
+        $header = [
+            "Authorization" => "Bearer " . $token
+        ];
+        return $header;
+    }
 
     public function test_index()
     {
@@ -39,7 +60,7 @@ class RequestControllerTest extends TestCase
         ]);
 
 
-        $this->getJson("api/$this->uri")
+        $this->getJson("api/$this->uri", $this->login())
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -66,7 +87,7 @@ class RequestControllerTest extends TestCase
         $Request->materials()->attach([
             1 => ['quantity' => 5],
         ]);
-        $this->getJson("api/$this->uri/$Request->id")
+        $this->getJson("api/$this->uri/$Request->id", $this->login())
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -74,7 +95,7 @@ class RequestControllerTest extends TestCase
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/100")
+        $this->getJson("api/$this->uri/100", $this->login())
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -104,7 +125,7 @@ class RequestControllerTest extends TestCase
             'comment' => '',
             'materials' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $this->postJson("api/$this->uri", $json)
+        $this->postJson("api/$this->uri", $json, $this->login())
             ->assertStatus(201)
             ->assertJson(['message' => 'Requerimiento Registrado']);
         //        $this->assertDatabaseHas("$this->uri",$json);
@@ -114,7 +135,7 @@ class RequestControllerTest extends TestCase
     {
         //        $this->withoutExceptionHandling();
         $json = [];
-        $this->postJson("api/$this->uri", $json)
+        $this->postJson("api/$this->uri", $json, $this->login())
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -142,7 +163,7 @@ class RequestControllerTest extends TestCase
             1 => ['quantity' => 5],
         ]);
 
-        $this->deleteJson("api/$this->uri/$Request->id")
+        $this->deleteJson("api/$this->uri/$Request->id", [], $this->login())
             ->assertStatus(200)
             ->assertJson(['message' => 'Requerimiento Eliminado']);
         $this->assertDatabaseMissing("$this->uri", [
@@ -154,7 +175,7 @@ class RequestControllerTest extends TestCase
     public function test_destroy_validate_resoruce_not_exist()
     {
         //        $this->withExceptionHandling();
-        $this->deleteJson("api/$this->uri/100")
+        $this->deleteJson("api/$this->uri/100", [], $this->login())
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
