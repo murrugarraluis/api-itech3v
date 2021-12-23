@@ -7,6 +7,7 @@ use App\Models\Mark;
 use App\Models\Material;
 use App\Models\MeasureUnit;
 use App\Models\Request;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,6 +16,26 @@ class RequestControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'requests';
+    public function login()
+    {
+        User::factory()->create([
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => bcrypt('123456'),
+        ]);
+        $json = [
+            'name' => 'Luis',
+            'email' => 'luis17@gmail.com',
+            'password' => '123456',
+        ];
+
+        $response = $this->postJson("api/login", $json);
+        $token = $response->baseResponse->original['token'];
+        $header = [
+            "Authorization" => "Bearer " . $token
+        ];
+        return $header;
+    }
 
     public function test_index()
     {
@@ -28,18 +49,18 @@ class RequestControllerTest extends TestCase
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
-//        Asociar Datos de Material
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+        //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-//        Agregar Producto al detalle de Requerimiento
+        //        Agregar Producto al detalle de Requerimiento
         $Request->materials()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' => 5],
         ]);
 
 
-        $this->getJson("api/$this->uri")
+        $this->getJson("api/$this->uri", $this->login())
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -47,26 +68,26 @@ class RequestControllerTest extends TestCase
 
     public function test_show()
     {
-//        $this->withExceptionHandling();
+        //        $this->withExceptionHandling();
         $Request = Request::factory()->create([
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
         ]);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-//        Asociar Datos de Material
+        //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-//        Agregar Producto al detalle de Requerimiento
+        //        Agregar Producto al detalle de Requerimiento
         $Request->materials()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' => 5],
         ]);
-        $this->getJson("api/$this->uri/$Request->id")
+        $this->getJson("api/$this->uri/$Request->id", $this->login())
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -74,24 +95,24 @@ class RequestControllerTest extends TestCase
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/100")
+        $this->getJson("api/$this->uri/100", $this->login())
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
-//
-//
+    //
+    //
     public function test_store()
     {
         $this->withoutExceptionHandling();
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-        $Material = Material::factory()->create(['name' => 'Camara FULL-HD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-7e7HF', 'minimum_stock' => 5]);
         //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
@@ -102,19 +123,19 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'materials' => [['id' => 1,'quantity'=>5], ['id' => 2,'quantity'=>3]]
+            'materials' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $this->postJson("api/$this->uri", $json)
+        $this->postJson("api/$this->uri", $json, $this->login())
             ->assertStatus(201)
             ->assertJson(['message' => 'Requerimiento Registrado']);
-//        $this->assertDatabaseHas("$this->uri",$json);
+        //        $this->assertDatabaseHas("$this->uri",$json);
     }
 
     public function test_store_validate_data_empty()
     {
-//        $this->withoutExceptionHandling();
+        //        $this->withoutExceptionHandling();
         $json = [];
-        $this->postJson("api/$this->uri", $json)
+        $this->postJson("api/$this->uri", $json, $this->login())
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -122,40 +143,39 @@ class RequestControllerTest extends TestCase
 
     public function test_destroy()
     {
-//        $this->withExceptionHandling();
+        //        $this->withExceptionHandling();
         $Request = Request::factory()->create([
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
         ]);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-//        Asociar Datos de Material
+        //        Asociar Datos de Material
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-//        Agregar Producto al detalle de Requerimiento
+        //        Agregar Producto al detalle de Requerimiento
         $Request->materials()->attach([
-            1 => ['quantity' =>5],
+            1 => ['quantity' => 5],
         ]);
 
-        $this->deleteJson("api/$this->uri/$Request->id")
+        $this->deleteJson("api/$this->uri/$Request->id", [], $this->login())
             ->assertStatus(200)
             ->assertJson(['message' => 'Requerimiento Eliminado']);
         $this->assertDatabaseMissing("$this->uri", [
             'id' => $Request->id,
             'deleted_at' => null
         ]);
-
     }
 
     public function test_destroy_validate_resoruce_not_exist()
     {
-//        $this->withExceptionHandling();
-        $this->deleteJson("api/$this->uri/100")
+        //        $this->withExceptionHandling();
+        $this->deleteJson("api/$this->uri/100", [], $this->login())
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
