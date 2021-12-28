@@ -12,34 +12,14 @@ class MarkControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'marks';
-    public function login()
-    {
-        User::factory()->create([
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => bcrypt('123456'),
-        ]);
-        $json = [
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => '123456',
-        ];
-
-        $response = $this->postJson("api/login", $json);
-        $token = $response->baseResponse->original['token'];
-        $header = [
-            "Authorization" => "Bearer " . $token
-        ];
-        return $header;
-    }
-
     public function test_index()
     {
         //        $this->withExceptionHandling();
         Mark::factory()->create([
             'name' => 'Categoria 1',
         ]);
-        $this->getJson("api/$this->uri", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -50,7 +30,8 @@ class MarkControllerTest extends TestCase
             'name' => 'Categoria 1',
         ]);
         $Mark->delete();
-        $this->getJson("api/$this->uri/deleted", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -61,14 +42,16 @@ class MarkControllerTest extends TestCase
         $Mark = Mark::factory()->create([
             'name' => 'Categoria 1',
         ]);
-        $this->getJson("api/$this->uri/$Mark->id", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$Mark->id")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -80,14 +63,16 @@ class MarkControllerTest extends TestCase
             'name' => 'Categoria 01',
         ]);
         $Mark->delete();
-        $this->getJson("api/$this->uri/deleted/$Mark->name", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted/$Mark->name")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
     public function test_show_deleted_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/deleted/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -98,7 +83,8 @@ class MarkControllerTest extends TestCase
         $json = [
             'name' => 'Categoria 01',
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Marca Registrada']);
         $this->assertDatabaseHas("$this->uri", $json);
@@ -111,7 +97,8 @@ class MarkControllerTest extends TestCase
         $json = [
             'name' => 'Categoria 01',
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -122,7 +109,8 @@ class MarkControllerTest extends TestCase
             'name' => 'Categoria 01',
         ]);
         $json = [];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -135,7 +123,8 @@ class MarkControllerTest extends TestCase
         $json = [
             'name' => 'Almacen A',
         ];
-        $this->putJson("api/$this->uri/$Mark->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Mark->id", $json)
             ->assertStatus(200)
             ->assertJson(['message' => 'Marca Actualizada']);
         $this->assertDatabaseHas("$this->uri", $json);
@@ -145,7 +134,8 @@ class MarkControllerTest extends TestCase
         $json = [
             'name' => 'Categoria A',
         ];
-        $this->putJson("api/$this->uri/100", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/100", $json)
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -157,7 +147,8 @@ class MarkControllerTest extends TestCase
         $json = [
             'name' => 'Categoria 01',
         ];
-        $this->putJson("api/$this->uri/$Mark->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Mark->id", $json)
             ->assertStatus(200)
             ->assertJson(['message' => 'Marca Actualizada']);
     }
@@ -172,7 +163,8 @@ class MarkControllerTest extends TestCase
         $json = [
             'name' => 'Almacen 01',
         ];
-        $this->putJson("api/$this->uri/$Mark->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Mark->id", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -182,7 +174,8 @@ class MarkControllerTest extends TestCase
             'name' => 'Almacen 01',
         ]);
         $json = [];
-        $this->putJson("api/$this->uri/$Mark->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Mark->id", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -193,7 +186,8 @@ class MarkControllerTest extends TestCase
         $Mark = Mark::factory()->create([
             'name' => 'Almacen 01',
         ]);
-        $this->deleteJson("api/$this->uri/$Mark->id", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/$Mark->id", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Marca Eliminada']);
         $this->assertDatabaseMissing("$this->uri", [
@@ -204,7 +198,8 @@ class MarkControllerTest extends TestCase
     public function test_destroy_validate_resoruce_not_exist()
     {
         $this->withExceptionHandling();
-        $this->deleteJson("api/$this->uri/100", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/100", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -216,7 +211,8 @@ class MarkControllerTest extends TestCase
             'name' => 'Almacen 01',
         ]);
         $Mark->delete();
-        $this->putJson("api/$this->uri/deleted/$Mark->name/restore", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/deleted/$Mark->name/restore", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Marca Restaurada']);
         $this->assertDatabaseHas("$this->uri", [
@@ -227,7 +223,8 @@ class MarkControllerTest extends TestCase
     public function test_restore_validate_resoruce_not_exist()
     {
         $this->withExceptionHandling();
-        $this->putJson("api/$this->uri/deleted/100/restore", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/deleted/100/restore", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
