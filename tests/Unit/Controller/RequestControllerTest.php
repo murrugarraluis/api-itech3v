@@ -16,27 +16,6 @@ class RequestControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'requests';
-    public function login()
-    {
-        User::factory()->create([
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => bcrypt('123456'),
-        ]);
-        $json = [
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => '123456',
-        ];
-
-        $response = $this->postJson("api/login", $json);
-        $token = $response->baseResponse->original['token'];
-        $header = [
-            "Authorization" => "Bearer " . $token
-        ];
-        return $header;
-    }
-
     public function test_index()
     {
         $this->withExceptionHandling();
@@ -59,8 +38,8 @@ class RequestControllerTest extends TestCase
             1 => ['quantity' => 5],
         ]);
 
-
-        $this->getJson("api/$this->uri", $this->login())
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -87,7 +66,8 @@ class RequestControllerTest extends TestCase
         $Request->materials()->attach([
             1 => ['quantity' => 5],
         ]);
-        $this->getJson("api/$this->uri/$Request->id", $this->login())
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$Request->id")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -95,7 +75,8 @@ class RequestControllerTest extends TestCase
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -125,7 +106,8 @@ class RequestControllerTest extends TestCase
             'comment' => '',
             'materials' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Requerimiento Registrado']);
         //        $this->assertDatabaseHas("$this->uri",$json);
@@ -135,7 +117,8 @@ class RequestControllerTest extends TestCase
     {
         //        $this->withoutExceptionHandling();
         $json = [];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -162,8 +145,8 @@ class RequestControllerTest extends TestCase
         $Request->materials()->attach([
             1 => ['quantity' => 5],
         ]);
-
-        $this->deleteJson("api/$this->uri/$Request->id", [], $this->login())
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/$Request->id", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Requerimiento Eliminado']);
         $this->assertDatabaseMissing("$this->uri", [
@@ -175,7 +158,8 @@ class RequestControllerTest extends TestCase
     public function test_destroy_validate_resoruce_not_exist()
     {
         //        $this->withExceptionHandling();
-        $this->deleteJson("api/$this->uri/100", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/100", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }

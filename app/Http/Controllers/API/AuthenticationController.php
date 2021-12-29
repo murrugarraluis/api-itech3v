@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -33,13 +34,13 @@ class AuthenticationController extends Controller
             throw ValidationException::withMessages([
                 'message' => ['Credenciales Incorrectas'],
             ]);
+        } else {
+            $token = $user->createToken($request->email)->plainTextToken;
+
+            return UserResource::collection(User::where('email', $request->email)->get())->additional([
+                'token' => $token
+            ]);
         }
-
-        $token = $user->createToken($request->email)->plainTextToken;
-
-        return response()->json([
-            'token' => $token
-        ]);
     }
     public function logout(Request $request)
     {

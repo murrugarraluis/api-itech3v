@@ -16,27 +16,6 @@ class MaterialControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'materials';
-    public function login()
-    {
-        User::factory()->create([
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => bcrypt('123456'),
-        ]);
-        $json = [
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => '123456',
-        ];
-
-        $response = $this->postJson("api/login", $json);
-        $token = $response->baseResponse->original['token'];
-        $header = [
-            "Authorization" => "Bearer " . $token
-        ];
-        return $header;
-    }
-
     public function test_index()
     {
         $this->withExceptionHandling();
@@ -48,8 +27,8 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-
-        $this->getJson("api/$this->uri", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -66,7 +45,8 @@ class MaterialControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
         $Material->delete();
-        $this->getJson("api/$this->uri/deleted", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -83,8 +63,8 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-
-        $this->getJson("api/$this->uri/$Material->id", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$Material->id")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -92,7 +72,8 @@ class MaterialControllerTest extends TestCase
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -110,7 +91,8 @@ class MaterialControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
         $Material->delete();
-        $this->getJson("api/$this->uri/deleted/$Material->name", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted/$Material->name")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -118,7 +100,8 @@ class MaterialControllerTest extends TestCase
     public function test_show_deleted_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/deleted/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -146,7 +129,8 @@ class MaterialControllerTest extends TestCase
             'measure_unit' => 1,
             'warehouses' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Material Registrado']);
     }
@@ -161,7 +145,8 @@ class MaterialControllerTest extends TestCase
             'mark' => 1,
             'measure_unit' => 1,
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -170,7 +155,8 @@ class MaterialControllerTest extends TestCase
     {
         //        $this->withoutExceptionHandling();
         $json = [];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -196,7 +182,8 @@ class MaterialControllerTest extends TestCase
             'measure_unit' => 1,
             'warehouses' => [['id' => 1], ['id' => 2]]
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Material Registrado']);
     }
@@ -228,7 +215,8 @@ class MaterialControllerTest extends TestCase
             'measure_unit' => 1,
             'warehouses' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $this->putJson("api/$this->uri/$Material->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
             ->assertJson(['message' => 'Material Actualizado']);
     }
@@ -241,7 +229,8 @@ class MaterialControllerTest extends TestCase
             'mark' => 1,
             'measure_unit' => 1,
         ];
-        $this->putJson("api/$this->uri/100", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/100", $json)
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -272,7 +261,8 @@ class MaterialControllerTest extends TestCase
             'measure_unit' => 1,
             'warehouses' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $this->putJson("api/$this->uri/$Material->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(200)
             ->assertJson(['message' => 'Material Actualizado']);
     }
@@ -299,7 +289,8 @@ class MaterialControllerTest extends TestCase
             'mark' => 1,
             'measure_unit' => 1,
         ];
-        $this->putJson("api/$this->uri/$MaterialB->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$MaterialB->id", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -318,7 +309,8 @@ class MaterialControllerTest extends TestCase
         $Material->measure_unit()->associate($MeasureUnit)->save();
 
         $json = [];
-        $this->putJson("api/$this->uri/$Material->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$Material->id", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -335,7 +327,8 @@ class MaterialControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-        $this->deleteJson("api/$this->uri/$Material->id", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/$Material->id", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Material Eliminado']);
         $this->assertDatabaseMissing("$this->uri", [
@@ -347,7 +340,8 @@ class MaterialControllerTest extends TestCase
     public function test_destroy_validate_resoruce_not_exist()
     {
         $this->withExceptionHandling();
-        $this->deleteJson("api/$this->uri/100", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/100", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -365,7 +359,8 @@ class MaterialControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
         $Material->delete();
-        $this->putJson("api/$this->uri/deleted/$Material->name/restore", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/deleted/$Material->name/restore", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Material Restaurado']);
         $this->assertDatabaseHas("$this->uri", [
@@ -377,7 +372,8 @@ class MaterialControllerTest extends TestCase
     public function test_restore_validate_resoruce_not_exist()
     {
         $this->withExceptionHandling();
-        $this->putJson("api/$this->uri/deleted/100/restore", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/deleted/100/restore", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }

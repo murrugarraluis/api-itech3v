@@ -12,38 +12,19 @@ class WarehouseControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'warehouses';
-    public function login()
-    {
-        User::factory()->create([
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => bcrypt('123456'),
-        ]);
-        $json = [
-            'name' => 'Luis',
-            'email' => 'luis17@gmail.com',
-            'password' => '123456',
-        ];
-
-        $response = $this->postJson("api/login", $json);
-        $token = $response->baseResponse->original['token'];
-        $header = [
-            "Authorization" => "Bearer " . $token
-        ];
-        return $header;
-    }
-
     public function test_index()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
     public function test_index_deleted()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/deleted", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -51,18 +32,20 @@ class WarehouseControllerTest extends TestCase
     public function test_show()
     {
         $this->withExceptionHandling();
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
         $warehouse = Warehouse::factory()->create([
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ]);
-        $this->getJson("api/$this->uri/$warehouse->id", $this->login())
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$warehouse->id")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -70,19 +53,21 @@ class WarehouseControllerTest extends TestCase
     public function test_show_deleted()
     {
         $this->withExceptionHandling();
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
         $warehouse = Warehouse::factory()->create([
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ]);
         $warehouse->delete();
-        $this->getJson("api/$this->uri/deleted/$warehouse->name", $this->login())
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted/$warehouse->name")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
     public function test_show_deleted_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $this->getJson("api/$this->uri/deleted/100", $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/deleted/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -94,7 +79,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Almacén Registrado']);
         $this->assertDatabaseHas("$this->uri", $json);
@@ -109,7 +95,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -121,7 +108,8 @@ class WarehouseControllerTest extends TestCase
             'description' => 'Breve Descripcion',
         ]);
         $json = [];
-        $this->postJson("api/$this->uri", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -136,7 +124,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen A',
             'description' => 'Breve Descripcion',
         ];
-        $this->putJson("api/$this->uri/$warehouse->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$warehouse->id", $json)
             ->assertStatus(200)
             ->assertJson(['message' => 'Almacén Actualizado']);
         $this->assertDatabaseHas("$this->uri", $json);
@@ -147,7 +136,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen A',
             'description' => 'Breve Descripcion',
         ];
-        $this->putJson("api/$this->uri/100", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/100", $json)
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -165,7 +155,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ];
-        $this->putJson("api/$this->uri/$warehouse->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$warehouse->id", $json)
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
@@ -179,7 +170,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ];
-        $this->putJson("api/$this->uri/$warehouse->id", $json, $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/$warehouse->id", $json)
             ->assertStatus(200)
             ->assertJson(['message' => 'Almacén Actualizado']);
     }
@@ -191,7 +183,8 @@ class WarehouseControllerTest extends TestCase
             'name' => 'Almacen 01',
             'description' => 'Breve Descripcion',
         ]);
-        $this->deleteJson("api/$this->uri/$warehouse->id", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/$warehouse->id", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Almacén Eliminado']);
         $this->assertDatabaseMissing("$this->uri", [
@@ -202,7 +195,8 @@ class WarehouseControllerTest extends TestCase
     public function test_destroy_validate_resoruce_not_exist()
     {
         $this->withExceptionHandling();
-        $this->deleteJson("api/$this->uri/100", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/100", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
@@ -215,7 +209,8 @@ class WarehouseControllerTest extends TestCase
             'description' => 'Breve Descripcion',
         ]);
         $warehouse->delete();
-        $this->putJson("api/$this->uri/deleted/$warehouse->name/restore", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/deleted/$warehouse->name/restore", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Almacén Restaurado']);
         $this->assertDatabaseHas("$this->uri", [
@@ -226,7 +221,8 @@ class WarehouseControllerTest extends TestCase
     public function test_restore_validate_resoruce_not_exist()
     {
         $this->withExceptionHandling();
-        $this->putJson("api/$this->uri/deleted/100/restore", [], $this->login())
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->putJson("api/$this->uri/deleted/100/restore", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
     }
