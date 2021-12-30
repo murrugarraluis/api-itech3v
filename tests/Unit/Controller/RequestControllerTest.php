@@ -128,14 +128,16 @@ class RequestControllerTest extends TestCase
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
 
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
         $json = [
+            'user_id'=> $user->id,
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
             'materials' => [['id' => 1, 'quantity' => 5], ['id' => 2, 'quantity' => 3]]
         ];
-        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+
         $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
             ->assertStatus(201)
             ->assertJson(['message' => 'Requerimiento Registrado']);
