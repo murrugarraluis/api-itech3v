@@ -16,9 +16,15 @@ class RoleSeeder extends Seeder
     public function run()
     {
         $logistica = Role::create(['name' => 'logistica']);
-        Permission::create(['name' => 'create material'])->assignRole($logistica);
-        Permission::create(['name' => 'edit material'])->assignRole($logistica);
-        Permission::create(['name' => 'update material'])->assignRole($logistica);
-        Permission::create(['name' => 'delete material'])->assignRole($logistica);
+        Permission::create(['name' => 'view materials'])->assignRole($logistica);
+        Permission::create(['name' => 'view categories'])->assignRole($logistica);
+        Permission::create(['name' => 'view marks'])->assignRole($logistica);
+        Permission::create(['name' => 'view measure units'])->assignRole($logistica);
+        Permission::create(['name' => 'view suppliers'])->assignRole($logistica);
+        Permission::create(['name' => 'view warehouses'])->assignRole($logistica);
+        Permission::create(['name' => 'view purchases'])->assignRole($logistica);
+        Permission::create(['name' => 'view orders purchase'])->assignRole($logistica);
+        Permission::create(['name' => 'view quotes'])->assignRole($logistica);
+        Permission::create(['name' => 'view requests'])->assignRole($logistica);
     }
 }
