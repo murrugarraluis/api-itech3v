@@ -44,7 +44,7 @@ class RequestSeeder extends Seeder
 
         $Request = Request::create([
             'date_required' => '2022-01-25',
-            'type_request' => 'Para Marketing',
+            'type_request' => 'Para Gerencia',
             'importance' => 'Baja',
             'comment' => '',
         ]);

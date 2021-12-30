@@ -36,6 +36,6 @@ class UserSeeder extends Seeder
             'name'=>'Vanesa Teran Gordon',
             'email'=>'marketing@app.com',
             'password'=>bcrypt('123456')
-        ]);
+        ])->assignRole('marketing');
     }
 }
