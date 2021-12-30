@@ -16,7 +16,7 @@ class RequestSeeder extends Seeder
     {
         $Request = Request::create([
             'date_required' => '2022-01-05',
-            'type_request' => 'Para Ventas',
+            'type_request' => 'Para Marketing',
             'importance' => 'Media',
             'comment' => '',
         ]);
@@ -25,20 +25,26 @@ class RequestSeeder extends Seeder
                 2 => ['quantity' => 6],
         ]);
 
+        $Request->user()->associate(4)->save();
+
         $Request = Request::create([
             'date_required' => '2022-01-02',
-            'type_request' => 'Para Ventas',
+            'type_request' => 'Para Marketing',
             'importance' => 'Alta',
             'comment' => '',
         ]);
+
+
         $Request->materials()->attach([
             1 => ['quantity' =>10],
             2 => ['quantity' => 4],
         ]);
 
+        $Request->user()->associate(4)->save();
+
         $Request = Request::create([
             'date_required' => '2022-01-25',
-            'type_request' => 'Para Contabilidad',
+            'type_request' => 'Para Marketing',
             'importance' => 'Baja',
             'comment' => '',
         ]);
@@ -48,5 +54,7 @@ class RequestSeeder extends Seeder
             3 => ['quantity' =>1],
             4 => ['quantity' => 4],
         ]);
+
+        $Request->user()->associate(1)->save();
     }
 }

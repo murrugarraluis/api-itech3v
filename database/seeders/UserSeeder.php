@@ -31,5 +31,11 @@ class UserSeeder extends Seeder
             'email'=>'almacen@app.com',
             'password'=>bcrypt('123456')
         ]);
+
+        User::create([
+            'name'=>'Vanesa Teran Gordon',
+            'email'=>'marketing@app.com',
+            'password'=>bcrypt('123456')
+        ]);
     }
 }

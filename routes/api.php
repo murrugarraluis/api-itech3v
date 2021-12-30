@@ -11,6 +11,7 @@ use App\Http\Controllers\API\{
     RequestController,
     AuthenticationController
 };
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +64,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('materials', MaterialController::class);
 
     Route::apiResource('requests', RequestController::class);
+    
+    Route::get('users/{user}/requests', [UserController::class, 'showRequests']);
 });

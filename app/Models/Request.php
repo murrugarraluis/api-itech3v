@@ -20,4 +20,8 @@ class Request extends Model
     {
         return $this->belongsToMany(Material::class)->withPivot('quantity');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
