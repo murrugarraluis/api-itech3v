@@ -20,6 +20,8 @@ class CreateRequestsTable extends Migration
             $table->string('type_request');
             $table->string('importance');
             $table->string('comment')->nullable();
+            $table->string('status');
+            $table->string('status_message');
             $table->timestamps();
             $table->softDeletes();
 

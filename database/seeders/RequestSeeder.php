@@ -19,6 +19,8 @@ class RequestSeeder extends Seeder
             'type_request' => 'Para Marketing',
             'importance' => 'Media',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         $Request->materials()->attach([
                 1 => ['quantity' =>5],
@@ -32,6 +34,8 @@ class RequestSeeder extends Seeder
             'type_request' => 'Para Marketing',
             'importance' => 'Alta',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
 
 
@@ -47,6 +51,8 @@ class RequestSeeder extends Seeder
             'type_request' => 'Para Gerencia',
             'importance' => 'Baja',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         $Request->materials()->attach([
             1 => ['quantity' =>2],

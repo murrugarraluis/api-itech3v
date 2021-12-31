@@ -28,7 +28,9 @@ class RequestStoreRequest extends FormRequest
             'type_request' => 'required',
             'importance' => 'required',
             'comment' => 'nullable',
-            'materials' => 'required'
+            'materials' => 'required',
+            'status' => 'nullable',
+            'status_message' => 'nullable',
         ];
     }
 }

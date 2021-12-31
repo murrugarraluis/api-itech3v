@@ -24,6 +24,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -52,6 +54,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -82,6 +86,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
@@ -163,6 +169,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);

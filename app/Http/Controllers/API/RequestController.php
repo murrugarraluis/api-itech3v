@@ -35,6 +35,8 @@ class RequestController extends Controller
             'type_request'=>$request->type_request,
             'importance'=>$request->importance,
             'comment'=>$request->comment,
+            'status'=>'Pendiente',
+            'status_message'=>'Enviado a Logistica'
         ]);
         foreach ($request->materials as $material){
             $requestCreate->materials()->attach($material['id'], ['quantity' => $material['quantity']]);

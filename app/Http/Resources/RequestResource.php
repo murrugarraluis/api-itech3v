@@ -18,6 +18,8 @@ class RequestResource extends JsonResource
             'type_request' => $this->type_request,
             'importance' => $this->importance,
             'comment' => $this->comment,
+            'status' => $this->status,
+            'status_message' => $this->status_message,
             'materials' => MaterialRequestResource::collection($this->materials),
         ];
     }
