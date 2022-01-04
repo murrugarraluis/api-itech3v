@@ -64,6 +64,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('materials', MaterialController::class);
 
 
+    Route::get('requests/{request}/evaluate', [RequestController::class, 'evaluate']);
     Route::patch('requests/{request}/change-status', [RequestController::class, 'changeStatus']);
     Route::apiResource('requests', RequestController::class);
     

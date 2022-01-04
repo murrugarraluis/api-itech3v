@@ -40,7 +40,7 @@ class RequestSeeder extends Seeder
 
 
         $Request->materials()->attach([
-            1 => ['quantity' =>10],
+            1 => ['quantity' =>50],
             2 => ['quantity' => 4],
         ]);
 
