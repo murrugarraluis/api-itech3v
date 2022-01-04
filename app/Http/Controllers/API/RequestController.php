@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestStoreRequest;
+use App\Http\Requests\RequestUpdateRequest;
 use App\Http\Resources\RequestResource;
 use App\Models\Request as RequestC;
 use Illuminate\Http\Request;
@@ -67,6 +68,12 @@ class RequestController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+    public function changeStatus(RequestUpdateRequest $requestUpdate, RequestC $request)
+    {
+        $request->update($requestUpdate->all());
+        return (new RequestResource($request))->additional(['message'=>'Requerimiento Actualizado']);
+    
     }
 
     /**

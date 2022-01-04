@@ -24,8 +24,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
         ]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -54,8 +54,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
         ]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -86,8 +86,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
         ]);
         $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
@@ -110,7 +110,7 @@ class RequestControllerTest extends TestCase
     public function test_show_validate_resource_not_exist()
     {
         $this->withExceptionHandling();
-        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
         $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/100")
             ->assertStatus(400)
             ->assertJson(['errors' => []]);
@@ -136,7 +136,7 @@ class RequestControllerTest extends TestCase
 
         $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
         $json = [
-            'user_id'=> $user->id,
+            'user_id' => $user->id,
             'date_required' => '2022-01-05',
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
@@ -159,7 +159,67 @@ class RequestControllerTest extends TestCase
             ->assertStatus(422)
             ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
     }
+    public function test_update_status()
+    {
+        $Request = Request::factory()->create([
+            'date_required' => '2022-01-05',
+            'type_request' => 'Para Operaciones',
+            'importance' => 'Media',
+            'comment' => '',
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
+        ]);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+        $Category = Category::factory()->create(['name' => 'Camaras']);
+        $Mark = Mark::factory()->create(['name' => 'Vision']);
+        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        //        Asociar Datos de Material
+        $Material->category()->associate($Category)->save();
+        $Material->mark()->associate($Mark)->save();
+        $Material->measure_unit()->associate($MeasureUnit)->save();
+        //        Agregar Producto al detalle de Requerimiento
+        $Request->materials()->attach([
+            1 => ['quantity' => 5],
+        ]);
+        $json = [
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Almacen',
+        ];
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
 
+        $this->actingAs($user)->withSession(['banned' => false])->patchJson("api/$this->uri/$Request->id/change-status", $json)
+            ->assertStatus(200)
+            ->assertJson(['message' => 'Requerimiento Actualizado']);
+    }
+    public function test_update_status_empty()
+    {
+        $Request = Request::factory()->create([
+            'date_required' => '2022-01-05',
+            'type_request' => 'Para Operaciones',
+            'importance' => 'Media',
+            'comment' => '',
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
+        ]);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+        $Category = Category::factory()->create(['name' => 'Camaras']);
+        $Mark = Mark::factory()->create(['name' => 'Vision']);
+        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        //        Asociar Datos de Material
+        $Material->category()->associate($Category)->save();
+        $Material->mark()->associate($Mark)->save();
+        $Material->measure_unit()->associate($MeasureUnit)->save();
+        //        Agregar Producto al detalle de Requerimiento
+        $Request->materials()->attach([
+            1 => ['quantity' => 5],
+        ]);
+        $json = [];
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+
+        $this->actingAs($user)->withSession(['banned' => false])->patchJson("api/$this->uri/$Request->id/change-status",$json)
+            ->assertStatus(422)
+            ->assertJson(['message' => 'Los datos proporcionado no son válidos']);
+    }
 
     public function test_destroy()
     {
@@ -169,8 +229,8 @@ class RequestControllerTest extends TestCase
             'type_request' => 'Para Operaciones',
             'importance' => 'Media',
             'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
         ]);
         $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
@@ -197,7 +257,7 @@ class RequestControllerTest extends TestCase
     public function test_destroy_validate_resoruce_not_exist()
     {
         //        $this->withExceptionHandling();
-        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
         $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/100", [])
             ->assertStatus(400)
             ->assertJson(['errors' => []]);

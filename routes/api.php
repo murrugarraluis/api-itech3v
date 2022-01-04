@@ -63,7 +63,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('materials/deleted/{name}/restore', [MaterialController::class, 'restore']);
     Route::apiResource('materials', MaterialController::class);
 
+
+    Route::patch('requests/{request}/change-status', [RequestController::class, 'changeStatus']);
     Route::apiResource('requests', RequestController::class);
+    
     
     Route::get('users/{user}/requests', [UserController::class, 'showRequests']);
 });
