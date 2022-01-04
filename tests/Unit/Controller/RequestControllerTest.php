@@ -16,7 +16,68 @@ class RequestControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'requests';
-    public function test_index()
+    // public function test_index()
+    // {
+    //     $this->withExceptionHandling();
+    //     $Request = Request::factory()->create([
+    //         'date_required' => '2022-01-05',
+    //         'type_request' => 'Para Operaciones',
+    //         'importance' => 'Media',
+    //         'comment' => '',
+    //         'status' => 'Pendiente',
+    //         'status_message' => 'Enviado a Logistica'
+    //     ]);
+    //     $Category = Category::factory()->create(['name' => 'Camaras']);
+    //     $Mark = Mark::factory()->create(['name' => 'Vision']);
+    //     $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+    //     $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+    //     //        Asociar Datos de Material
+    //     $Material->category()->associate($Category)->save();
+    //     $Material->mark()->associate($Mark)->save();
+    //     $Material->measure_unit()->associate($MeasureUnit)->save();
+    //     //        Agregar Producto al detalle de Requerimiento
+    //     $Request->materials()->attach([
+    //         1 => ['quantity' => 5],
+    //     ]);
+
+    //     $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+    //     $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri")
+    //         ->assertStatus(200)
+    //         ->assertJson(['data' => []]);
+    // }
+    // public function test_index_filter_with_user()
+    // {
+    //     $this->withExceptionHandling();
+    //     $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+    //     $Request = Request::factory()->create([
+    //         'date_required' => '2022-01-05',
+    //         'type_request' => 'Para Operaciones',
+    //         'importance' => 'Media',
+    //         'comment' => '',
+    //         'status' => 'Pendiente',
+    //         'status_message' => 'Enviado a Logistica'
+    //     ]);
+    //     $Category = Category::factory()->create(['name' => 'Camaras']);
+    //     $Mark = Mark::factory()->create(['name' => 'Vision']);
+    //     $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+    //     $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+    //     //        Asociar Datos de Material
+    //     $Material->category()->associate($Category)->save();
+    //     $Material->mark()->associate($Mark)->save();
+    //     $Material->measure_unit()->associate($MeasureUnit)->save();
+    //     //        Agregar Producto al detalle de Requerimiento
+    //     $Request->materials()->attach([
+    //         1 => ['quantity' => 5],
+    //     ]);
+
+    //     $user->requests()->save($Request);
+    //     $user->refresh();
+    //     $this->actingAs($user)->withSession(['banned' => false])->getJson("api/users/$user->id/$this->uri")
+    //         ->assertStatus(200)
+    //         ->assertJson(['data' => []]);
+    // }
+
+    public function test_index_with_status_in_warehouse()
     {
         $this->withExceptionHandling();
         $Request = Request::factory()->create([
@@ -25,7 +86,7 @@ class RequestControllerTest extends TestCase
             'importance' => 'Media',
             'comment' => '',
             'status' => 'Pendiente',
-            'status_message' => 'Enviado a Logistica'
+            'status_message' => 'Enviado a Almacen'
         ]);
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -41,42 +102,10 @@ class RequestControllerTest extends TestCase
         ]);
 
         $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
-        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri")
+        $r = $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri?status_message=Enviado a Almacen")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
-    public function test_index_filter_with_user()
-    {
-        $this->withExceptionHandling();
-        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
-        $Request = Request::factory()->create([
-            'date_required' => '2022-01-05',
-            'type_request' => 'Para Operaciones',
-            'importance' => 'Media',
-            'comment' => '',
-            'status' => 'Pendiente',
-            'status_message' => 'Enviado a Logistica'
-        ]);
-        $Category = Category::factory()->create(['name' => 'Camaras']);
-        $Mark = Mark::factory()->create(['name' => 'Vision']);
-        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
-        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
-        //        Asociar Datos de Material
-        $Material->category()->associate($Category)->save();
-        $Material->mark()->associate($Mark)->save();
-        $Material->measure_unit()->associate($MeasureUnit)->save();
-        //        Agregar Producto al detalle de Requerimiento
-        $Request->materials()->attach([
-            1 => ['quantity' => 5],
-        ]);
-
-        $user->requests()->save($Request);
-        $user->refresh();
-        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/users/$user->id/$this->uri")
-            ->assertStatus(200)
-            ->assertJson(['data' => []]);
-    }
-
 
     public function test_show()
     {

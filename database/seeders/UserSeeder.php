@@ -24,13 +24,13 @@ class UserSeeder extends Seeder
             'name'=>'Del Piero Urbina Rodriguez',
             'email'=>'logistica@app.com',
             'password'=>bcrypt('123456')
-        ])->assignRole('logistica');
+        ])->assignRole('logistics');
         
         User::create([
             'name'=>'Raul Castro Rivera',
             'email'=>'almacen@app.com',
             'password'=>bcrypt('123456')
-        ]);
+        ])->assignRole('warehouse');
 
         User::create([
             'name'=>'Vanesa Teran Gordon',

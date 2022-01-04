@@ -18,8 +18,12 @@ class RequestController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
+        if ($request->status_message) {
+            $requests = RequestC::where('status_message',$request->status_message)->get();
+            return RequestResource::collection($requests);
+        }  
         return RequestResource::collection(RequestC::all());
     }
 
