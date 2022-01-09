@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestStoreRequest;
 use App\Http\Requests\RequestUpdateRequest;
+use App\Http\Resources\MaterialRequestResource;
 use App\Http\Resources\MaterialResource;
 use App\Http\Resources\RequestResource;
 use App\Models\Material;
@@ -78,12 +79,14 @@ class RequestController extends Controller
         if (!empty($materials_detail)) {
             // Retornar Detalle de materiales que no cumplen
 
-            return response()->json([
-                'data'=>[
-                    'materials'=>$materials_detail
-                ],
-                'message'=>'Requerimiento Insatisfecho'
-            ]);
+            // return response()->json([
+            //     'data'=>[
+            //         'materials'=>$materials_detail
+            //     ],
+            //     'message'=>''
+            // ]);
+            return MaterialRequestResource::collection($materials_detail)->additional(['message' => 'Requerimiento Insatisfecho']);
+            // return (new MaterialRequestResource($materials_detail))->additional(['message' => 'Requerimiento Insatisfecho']);
         }
         return (new RequestResource($request))->additional(['message' => 'Requerimiento Satisfecho']);
     }
