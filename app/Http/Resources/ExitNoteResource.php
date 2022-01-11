@@ -26,7 +26,7 @@ class ExitNoteResource extends JsonResource
     }
     public function convertCode($id): string
     {
-        $prefijo = "REQ";
+        $prefijo = "NSA";
         $nroDigist = 6;
         $digits = '000000';
         $number = substr($digits, 0, $nroDigist - strlen($id)) . $id;
