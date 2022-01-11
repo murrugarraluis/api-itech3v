@@ -9,9 +9,11 @@ use App\Http\Controllers\API\{
     MeasureUnitController,
     MaterialController,
     RequestController,
-    AuthenticationController
+    AuthenticationController,
+    ExitNoteController
 };
 use App\Http\Controllers\UserController;
+use App\Models\ExitNote;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +72,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     
     Route::get('users/{user}/requests', [UserController::class, 'showRequests']);
+
+    Route::apiResource('exit-notes',ExitNoteController::class);
 });

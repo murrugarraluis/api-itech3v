@@ -18,4 +18,8 @@ class Warehouse extends Model
     {
         return $this->belongsToMany(Material::class);
     }
+    public function exit_notes()
+    {
+        return $this->hasMany(ExitNote::class);
+    }
 }
