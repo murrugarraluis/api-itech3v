@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ExitNoteStoreRequest;
 use App\Http\Resources\ExitNoteResource;
 use App\Models\ExitNote;
+use App\Models\Material;
 use Illuminate\Http\Request;
 
 class ExitNoteController extends Controller
@@ -35,9 +36,22 @@ class ExitNoteController extends Controller
             'document_number' => $request->document_number
         ]);
         foreach ($request->materials as $material) {
-            $exit_note->materials()->attach($material['id'], ['quantity' => $material['quantity']]);
+            
+            $warehouse = $request->warehouse;
+            $material_id = $material['id'];
+            $material_quantity = $material['quantity'];
+            $material = Material::find($material_id);
+
+
+            $ActualStock = $material->warehouses()->find($warehouse)->pivot->quantity;
+            $newStock = $ActualStock - $material_quantity;
+            $material->warehouses()->updateExistingPivot($warehouse,[
+                'quantity'=>$newStock
+            ]);
+
+            $exit_note->materials()->attach($material_id, ['quantity' => $material_quantity]);
         }
-        $exit_note->warehouse()->associate($request->warehouse)->save();
+        $exit_note->warehouse()->associate($warehouse)->save();
         return (new ExitNoteResource($exit_note))->additional(['message' => 'Nota de Salida Registrada']);
     
     }
