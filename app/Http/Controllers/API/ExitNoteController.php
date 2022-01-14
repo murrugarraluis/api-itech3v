@@ -37,7 +37,7 @@ class ExitNoteController extends Controller
         foreach ($request->materials as $material) {
             $exit_note->materials()->attach($material['id'], ['quantity' => $material['quantity']]);
         }
-        $exit_note->warehouse()->associate($request->warehouse_id)->save();
+        $exit_note->warehouse()->associate($request->warehouse)->save();
         return (new ExitNoteResource($exit_note))->additional(['message' => 'Nota de Salida Registrada']);
     
     }

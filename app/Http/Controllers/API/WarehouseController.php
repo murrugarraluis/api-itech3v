@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WarehouseStoreRequest;
 use App\Http\Requests\WarehouseUpdateRequest;
+use App\Http\Resources\MaterialResource;
+use App\Http\Resources\MaterialWarehouseResource;
 use App\Http\Resources\WarehouseResource;
 use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Collection;
@@ -86,4 +88,9 @@ class WarehouseController extends Controller
         $warehouse->restore();
         return (new WarehouseResource($warehouse))->additional(['message'=>'Almacén Restaurado']);
     }
+    public function showMaterialsByWarehouse(Warehouse $warehouse)
+    {
+        return MaterialWarehouseResource::collection($warehouse->materials);
+    }
+    
 }

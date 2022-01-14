@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('warehouses/deleted', [WarehouseController::class, 'indexDeleted']);
     Route::get('warehouses/deleted/{name}', [WarehouseController::class, 'showDeleted']);
+    Route::get('warehouses/{warehouse}/materials', [WarehouseController::class, 'showMaterialsByWarehouse']);
     Route::put('warehouses/deleted/{name}/restore', [WarehouseController::class, 'restore']);
     Route::apiResource('warehouses', WarehouseController::class);
 

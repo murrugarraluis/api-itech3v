@@ -28,8 +28,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'view purchases'])->assignRole($logistics);
         Permission::create(['name' => 'view orders purchase'])->assignRole($logistics);
         Permission::create(['name' => 'view quotes'])->assignRole($logistics);
-        Permission::create(['name' => 'view entry note'])->assignRole($warehouse);
-        Permission::create(['name' => 'view exit note'])->assignRole($warehouse);
+        Permission::create(['name' => 'view entry notes'])->assignRole($warehouse);
+        Permission::create(['name' => 'view exit notes'])->assignRole($warehouse);
         Permission::create(['name' => 'view requests'])->syncRoles($logistics,$marketing,$warehouse);
     }
 }

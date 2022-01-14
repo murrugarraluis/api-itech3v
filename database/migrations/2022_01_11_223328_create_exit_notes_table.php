@@ -19,7 +19,7 @@ class CreateExitNotesTable extends Migration
             $table->date('date');
             $table->string('type_exit');
             $table->string('comment')->nullable();
-            $table->string('document_number');
+            $table->string('document_number')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

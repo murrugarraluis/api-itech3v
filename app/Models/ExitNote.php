@@ -15,6 +15,7 @@ class ExitNote extends Model
         'comment',
         'document_number'
     ];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);

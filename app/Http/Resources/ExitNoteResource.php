@@ -6,17 +6,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ExitNoteResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [
             'id' => $this->id,
             'code' => $this->convertCode($this->id),
+            'warehouse' => $this->warehouse ? $this->warehouse->id : 'None',
             'date' => $this->date,
             'type_exit' => $this->type_exit,
             'comment' => $this->comment,
