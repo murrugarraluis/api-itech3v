@@ -40,7 +40,7 @@ class EntryNoteSeeder extends Seeder
 
         $exit_note = EntryNote::create([
             'date' => '2022-01-19',
-            'type_entry' => 'Por Reeingreso',
+            'type_entry' => 'Por Reingreso',
             'comment' => '',
             'document_number'=>'0000001',
         ]);

@@ -93,7 +93,7 @@ class EntryNoteController extends Controller
             $material_quantity = $material->pivot->quantity;
 
             $ActualStock = $material_find->warehouses()->find($warehouse_id)->pivot->quantity;
-            $newStock = $ActualStock + $material_quantity;
+            $newStock = $ActualStock - $material_quantity;
             $material->warehouses()->updateExistingPivot($warehouse_id, [
                 'quantity' => $newStock
             ]);

@@ -27,7 +27,7 @@ class EntryNoteResource extends JsonResource
     }
     public function convertCode($id): string
     {
-        $prefijo = "NSA";
+        $prefijo = "NIN";
         $nroDigist = 6;
         $digits = '000000';
         $number = substr($digits, 0, $nroDigist - strlen($id)) . $id;
