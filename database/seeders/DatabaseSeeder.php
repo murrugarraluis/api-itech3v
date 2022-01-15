@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\EntryNote;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MaterialSeeder::class);
         $this->call(RequestSeeder::class);
         $this->call(ExitNoteSeeder::class);
+        $this->call(EntryNoteSeeder::class);
 
     }
 }
