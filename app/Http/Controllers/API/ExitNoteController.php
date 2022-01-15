@@ -36,24 +36,23 @@ class ExitNoteController extends Controller
             'document_number' => $request->document_number
         ]);
         foreach ($request->materials as $material) {
-            
+
             $warehouse = $request->warehouse;
             $material_id = $material['id'];
             $material_quantity = $material['quantity'];
-            $material = Material::find($material_id);
+            $material_find = Material::find($material_id);
 
 
-            $ActualStock = $material->warehouses()->find($warehouse)->pivot->quantity;
+            $ActualStock = $material_find->warehouses()->find($warehouse)->pivot->quantity;
             $newStock = $ActualStock - $material_quantity;
-            $material->warehouses()->updateExistingPivot($warehouse,[
-                'quantity'=>$newStock
+            $material_find->warehouses()->updateExistingPivot($warehouse, [
+                'quantity' => $newStock
             ]);
 
             $exit_note->materials()->attach($material_id, ['quantity' => $material_quantity]);
         }
         $exit_note->warehouse()->associate($warehouse)->save();
         return (new ExitNoteResource($exit_note))->additional(['message' => 'Nota de Salida Registrada']);
-    
     }
 
     /**
@@ -87,8 +86,32 @@ class ExitNoteController extends Controller
      */
     public function destroy(ExitNote $exitNote)
     {
+        foreach ($exitNote->materials as $material) {
+
+            $warehouse_id = $exitNote->warehouse->id;
+            $material_find = Material::find($material->id);
+            $material_quantity = $material->pivot->quantity;
+
+            $ActualStock = $material_find->warehouses()->find($warehouse_id)->pivot->quantity;
+            $newStock = $ActualStock + $material_quantity;
+            $material->warehouses()->updateExistingPivot($warehouse_id, [
+                'quantity' => $newStock
+            ]);
+            // $warehouse = $request->warehouse;
+            // $material_id = $material['id'];
+            // $material_quantity = $material['quantity'];
+            // $material = Material::find($material_id);
+
+
+            // $ActualStock = $material->warehouses()->find($warehouse)->pivot->quantity;
+            // $newStock = $ActualStock - $material_quantity;
+            // $material->warehouses()->updateExistingPivot($warehouse,[
+            //     'quantity'=>$newStock
+            // ]);
+
+            // $exit_note->materials()->attach($material_id, ['quantity' => $material_quantity]);
+        }
         $exitNote->delete();
         return (new ExitNoteResource($exitNote))->additional(['message' => 'Nota de Salida Eliminada']);
-    
     }
 }

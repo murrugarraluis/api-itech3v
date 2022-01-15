@@ -148,6 +148,9 @@ class ExitNoteControllerTest extends TestCase
     public function test_destroy()
     {
         $this->withExceptionHandling();
+        $warehouse = Warehouse::factory()->create(['name' => 'Almacen 01', 'description' => 'Almacen ubicado en la calle Av.Gonzales Caceda']);
+        $warehouse = Warehouse::factory()->create(['name' => 'Almacen 02', 'description' => 'QAlmacen ubicado en la calle Av.Gonzales Caceda']);
+
         $exit_note = ExitNote::factory()->create([
             'date' => '2022-01-05',
             'type_exit' => 'Para Ventas',
@@ -163,9 +166,11 @@ class ExitNoteControllerTest extends TestCase
         $Material->category()->associate($Category)->save();
         $Material->mark()->associate($Mark)->save();
         $Material->measure_unit()->associate($MeasureUnit)->save();
-
-        $almacen = Warehouse::factory()->create(['name' => 'Almacen 01', 'description' => 'Almacen ubicado en la calle Av.Gonzales Caceda']);
-        $exit_note->warehouse()->associate($almacen)->save();
+        $Material->warehouses()->attach([
+            1 => ['quantity' => 5],
+            2 => ['quantity' => 3],
+        ]);
+        $exit_note->warehouse()->associate($warehouse)->save();
         //        Agregar Producto al detalle de Requerimiento
         $exit_note->materials()->attach([
             1 => ['quantity' => 5],
