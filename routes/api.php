@@ -11,10 +11,12 @@ use App\Http\Controllers\API\{
     RequestController,
     AuthenticationController,
     EntryNoteController,
-    ExitNoteController
+    ExitNoteController,
+    QuotationController
 };
 use App\Http\Controllers\UserController;
 use App\Models\ExitNote;
+use App\Models\Quotation;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,4 +79,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('exit-notes',ExitNoteController::class);
     Route::apiResource('entry-notes',EntryNoteController::class);
+    Route::apiResource('quotations',QuotationController::class);
 });
