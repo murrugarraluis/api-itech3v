@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RequestStoreRequest extends FormRequest
+class ExitNoteStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,11 @@ class RequestStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'date_required' => 'required|date',
-            'type_request' => 'required',
-            'importance' => 'required',
+            'date' => 'required|date',
+            'type_exit' => 'required',
             'comment' => 'nullable',
+            'document_number' => 'nullable',
             'materials' => 'required',
-            'status' => 'nullable',
-            'status_message' => 'nullable',
         ];
     }
 }

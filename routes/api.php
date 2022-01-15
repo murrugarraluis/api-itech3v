@@ -9,8 +9,12 @@ use App\Http\Controllers\API\{
     MeasureUnitController,
     MaterialController,
     RequestController,
-    AuthenticationController
+    AuthenticationController,
+    EntryNoteController,
+    ExitNoteController
 };
+use App\Http\Controllers\UserController;
+use App\Models\ExitNote;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('warehouses/deleted', [WarehouseController::class, 'indexDeleted']);
     Route::get('warehouses/deleted/{name}', [WarehouseController::class, 'showDeleted']);
+    Route::get('warehouses/{warehouse}/materials', [WarehouseController::class, 'showMaterialsByWarehouse']);
     Route::put('warehouses/deleted/{name}/restore', [WarehouseController::class, 'restore']);
     Route::apiResource('warehouses', WarehouseController::class);
 
@@ -62,5 +67,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('materials/deleted/{name}/restore', [MaterialController::class, 'restore']);
     Route::apiResource('materials', MaterialController::class);
 
+
+    Route::get('requests/{request}/evaluate', [RequestController::class, 'evaluate']);
+    Route::patch('requests/{request}/change-status', [RequestController::class, 'changeStatus']);
     Route::apiResource('requests', RequestController::class);
+    
+    
+    Route::get('users/{user}/requests', [UserController::class, 'showRequests']);
+
+    Route::apiResource('exit-notes',ExitNoteController::class);
+    Route::apiResource('entry-notes',EntryNoteController::class);
 });

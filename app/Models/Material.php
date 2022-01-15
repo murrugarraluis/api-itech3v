@@ -40,4 +40,8 @@ class Material extends Model
     {
         return $this->belongsToMany(Warehouse::class)->withPivot('quantity');
     }
+    public function exit_notes(): BelongsToMany
+    {
+        return $this->belongsToMany(ExitNote::class);
+    }
 }

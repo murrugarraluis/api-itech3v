@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRequestsTable extends Migration
+class CreateEntryNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,15 @@ class CreateRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('entry_notes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->date('date_required');
-            $table->string('type_request');
-            $table->string('importance');
+            $table->foreignId('warehouse_id')->nullable()->constrained('warehouses');
+            $table->date('date');
+            $table->string('type_entry');
             $table->string('comment')->nullable();
-            $table->string('status');
-            $table->string('status_message');
+            $table->string('document_number')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
@@ -35,6 +32,6 @@ class CreateRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('entry_notes');
     }
 }

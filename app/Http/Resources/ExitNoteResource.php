@@ -2,37 +2,26 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use JsonSerializable;
 
-class RequestResource extends JsonResource
+class ExitNoteResource extends JsonResource
 {
     public function toArray($request)
     {
         return [
             'id' => $this->id,
             'code' => $this->convertCode($this->id),
-            'date_required' => $this->date_required,
-            'type_request' => $this->type_request,
-            'importance' => $this->importance,
+            'warehouse' => $this->warehouse ? $this->warehouse->id : 'None',
+            'date' => $this->date,
+            'type_exit' => $this->type_exit,
             'comment' => $this->comment,
-            'status' => $this->status,
-            'status_message' => $this->status_message,
+            'document_number' => $this->document_number,
             'materials' => MaterialRequestResource::collection($this->materials),
         ];
     }
-
-    /**
-     * Transform the resource into an array.
-     *
-     * @param Request $request
-     * @return array|Arrayable|JsonSerializable
-     */
     public function convertCode($id): string
     {
-        $prefijo = "REQ";
+        $prefijo = "NSA";
         $nroDigist = 6;
         $digits = '000000';
         $number = substr($digits, 0, $nroDigist - strlen($id)) . $id;

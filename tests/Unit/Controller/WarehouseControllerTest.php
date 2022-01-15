@@ -20,6 +20,18 @@ class WarehouseControllerTest extends TestCase
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
+    public function test_index_materials_by_warehouse()
+    {
+        $this->withExceptionHandling();
+        $warehouse = Warehouse::factory()->create([
+            'name' => 'Almacen 01',
+            'description' => 'Breve Descripcion',
+        ]);
+        $user = User::factory()->create(['name'=>'Luis','email'=>'Luis@gmail.com','password'=>bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$warehouse->id/materials")
+            ->assertStatus(200)
+            ->assertJson(['data' => []]);
+    }
     public function test_index_deleted()
     {
         $this->withExceptionHandling();

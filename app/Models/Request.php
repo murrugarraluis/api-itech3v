@@ -14,10 +14,16 @@ class Request extends Model
         'type_request',
         'importance',
         'comment',
+        'status',
+        'status_message',
     ];
     protected $hidden = ['created_at','updated_at','deleted_at'];
     public function materials(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Material::class)->withPivot('quantity');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -10,6 +10,7 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'username' => $this->name,
             'roles'=>RoleResource::collection($this->roles),
     ];
     }

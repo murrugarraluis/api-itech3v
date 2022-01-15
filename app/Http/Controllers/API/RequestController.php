@@ -4,7 +4,11 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RequestStoreRequest;
+use App\Http\Requests\RequestUpdateRequest;
+use App\Http\Resources\MaterialRequestResource;
+use App\Http\Resources\MaterialResource;
 use App\Http\Resources\RequestResource;
+use App\Models\Material;
 use App\Models\Request as RequestC;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -17,8 +21,12 @@ class RequestController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index(): AnonymousResourceCollection
+    public function index(Request $request): AnonymousResourceCollection
     {
+        if ($request->status_message) {
+            $requests = RequestC::where('status_message', $request->status_message)->get();
+            return RequestResource::collection($requests);
+        }
         return RequestResource::collection(RequestC::all());
     }
 
@@ -31,15 +39,18 @@ class RequestController extends Controller
     public function store(RequestStoreRequest $request)
     {
         $requestCreate = RequestC::create([
-            'date_required'=>$request->date_required,
-            'type_request'=>$request->type_request,
-            'importance'=>$request->importance,
-            'comment'=>$request->comment,
+            'date_required' => $request->date_required,
+            'type_request' => $request->type_request,
+            'importance' => $request->importance,
+            'comment' => $request->comment,
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Logistica'
         ]);
-        foreach ($request->materials as $material){
+        foreach ($request->materials as $material) {
             $requestCreate->materials()->attach($material['id'], ['quantity' => $material['quantity']]);
         }
-        return (new RequestResource($requestCreate))->additional(['message'=>'Requerimiento Registrado']);
+        $requestCreate->user()->associate($request->user_id)->save();
+        return (new RequestResource($requestCreate))->additional(['message' => 'Requerimiento Registrado']);
     }
 
     /**
@@ -51,7 +62,41 @@ class RequestController extends Controller
     public function show(RequestC $request): RequestResource
     {
         return new RequestResource($request);
+    }
+    public function evaluate(RequestC $request)
+    {
+        $materials_detail = [];
+        foreach ($request->materials as $material) {
+            $materialBase = Material::find($material->id);
+            $quatityHas = $this->stock($materialBase->warehouses);
+            $quatityRequest = $material->pivot->quantity;
+            if ($quatityRequest > $quatityHas ) {
+                
+                // Almacenar Material para enviar un detalle de los materiales no satisfechos
+                array_push($materials_detail, $material);
+            }
+        }
+        if (!empty($materials_detail)) {
+            // Retornar Detalle de materiales que no cumplen
 
+            // return response()->json([
+            //     'data'=>[
+            //         'materials'=>$materials_detail
+            //     ],
+            //     'message'=>''
+            // ]);
+            return MaterialRequestResource::collection($materials_detail)->additional(['message' => 'Requerimiento Insatisfecho']);
+            // return (new MaterialRequestResource($materials_detail))->additional(['message' => 'Requerimiento Insatisfecho']);
+        }
+        return (new RequestResource($request))->additional(['message' => 'Requerimiento Satisfecho']);
+    }
+    private function stock($warehouses)
+    {
+        $suma = 0;
+        foreach ($warehouses as $warehouse) {
+            $suma += $warehouse->pivot->quantity;
+        }
+        return $suma;
     }
 
     /**
@@ -65,6 +110,11 @@ class RequestController extends Controller
     {
         //
     }
+    public function changeStatus(RequestUpdateRequest $requestUpdate, RequestC $request)
+    {
+        $request->update($requestUpdate->all());
+        return (new RequestResource($request))->additional(['message' => 'Requerimiento Actualizado']);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -76,6 +126,5 @@ class RequestController extends Controller
     {
         $request->delete();
         return (new RequestResource($request))->additional(['message' => 'Requerimiento Eliminado']);
-
     }
 }
