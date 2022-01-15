@@ -10,6 +10,7 @@ use App\Http\Controllers\API\{
     MaterialController,
     RequestController,
     AuthenticationController,
+    EntryNoteController,
     ExitNoteController
 };
 use App\Http\Controllers\UserController;
@@ -75,4 +76,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('users/{user}/requests', [UserController::class, 'showRequests']);
 
     Route::apiResource('exit-notes',ExitNoteController::class);
+    Route::apiResource('entry-notes',EntryNoteController::class);
 });

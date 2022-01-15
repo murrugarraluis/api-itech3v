@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ExitNoteStoreRequest;
-use App\Http\Resources\ExitNoteResource;
-use App\Models\ExitNote;
+use App\Http\Resources\EntryNoteResource;
+use App\Models\EntryNote;
 use App\Models\Material;
+use Dotenv\Parser\Entry;
 use Illuminate\Http\Request;
 
-class ExitNoteController extends Controller
+class EntryNoteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class ExitNoteController extends Controller
      */
     public function index()
     {
-        return ExitNoteResource::collection(ExitNote::all());
+        return EntryNoteResource::collection(EntryNote::all());
     }
 
     /**
@@ -27,11 +27,11 @@ class ExitNoteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ExitNoteStoreRequest $request)
+    public function store(Request $request)
     {
-        $exit_note = ExitNote::create([
+        $entry_note = EntryNote::create([
             'date' => $request->date,
-            'type_exit' => $request->type_exit,
+            'type_entry' => $request->type_entry,
             'comment' => $request->comment,
             'document_number' => $request->document_number
         ]);
@@ -44,36 +44,36 @@ class ExitNoteController extends Controller
 
 
             $ActualStock = $material_find->warehouses()->find($warehouse)->pivot->quantity;
-            $newStock = $ActualStock - $material_quantity;
+            $newStock = $ActualStock + $material_quantity;
             $material_find->warehouses()->updateExistingPivot($warehouse, [
                 'quantity' => $newStock
             ]);
 
-            $exit_note->materials()->attach($material_id, ['quantity' => $material_quantity]);
+            $entry_note->materials()->attach($material_id, ['quantity' => $material_quantity]);
         }
-        $exit_note->warehouse()->associate($warehouse)->save();
-        return (new ExitNoteResource($exit_note))->additional(['message' => 'Nota de Salida Registrada']);
+        $entry_note->warehouse()->associate($warehouse)->save();
+        return (new EntryNoteResource($entry_note))->additional(['message' => 'Nota de Ingreso Registrada']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ExitNote  $exitNote
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(ExitNote $exitNote)
+    public function show(EntryNote $entryNote)
     {
-        return new ExitNoteResource($exitNote);
+        return new EntryNoteResource($entryNote);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ExitNote  $exitNote
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ExitNote $exitNote)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -81,14 +81,14 @@ class ExitNoteController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ExitNote  $exitNote
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ExitNote $exitNote)
+    public function destroy(EntryNote $entryNote)
     {
-        foreach ($exitNote->materials as $material) {
+        foreach ($entryNote->materials as $material) {
 
-            $warehouse_id = $exitNote->warehouse->id;
+            $warehouse_id = $entryNote->warehouse->id;
             $material_find = Material::find($material->id);
             $material_quantity = $material->pivot->quantity;
 
@@ -98,7 +98,7 @@ class ExitNoteController extends Controller
                 'quantity' => $newStock
             ]);
         }
-        $exitNote->delete();
-        return (new ExitNoteResource($exitNote))->additional(['message' => 'Nota de Salida Eliminada']);
+        $entryNote->delete();
+        return (new entryNoteResource($entryNote))->additional(['message' => 'Nota de Salida Eliminada']);
     }
 }
