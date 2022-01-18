@@ -14,6 +14,7 @@ class Quotation extends Model
         'way_to_pay',
         'type_quotation',
         'document_number',
+        'status',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     public function supplier()

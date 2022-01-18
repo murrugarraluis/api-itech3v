@@ -14,7 +14,10 @@ class SupplierFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'type_document'=>'RUC',
+            'number_document'=>$this->faker->numberBetween($min = 11111111111, $max = 9999999999),
+            'name'=>$this->faker->company,
+            'lastname'=>'',
         ];
     }
 }

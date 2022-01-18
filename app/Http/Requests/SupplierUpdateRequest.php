@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class QuotationStoreRequest extends FormRequest
+class SupplierUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,10 @@ class QuotationStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'supplier' => 'required',
-            'date_agreed' => 'required|date',
-            'way_to_pay' => 'required',
-            'type_quotation' => 'required',
-            'document_number' => 'nullable',
-            'materials' => 'required',
-            'status' => 'nullable',
+            'type_document'=>'required',
+            'number_document'=>'required|unique:suppliers,number_document,'.$this->route('supplier')->id,
+            'name'=>'required',
+            'lastname'=>'required',
         ];
     }
 }

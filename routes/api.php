@@ -12,7 +12,8 @@ use App\Http\Controllers\API\{
     AuthenticationController,
     EntryNoteController,
     ExitNoteController,
-    QuotationController
+    QuotationController,
+    SupplierController
 };
 use App\Http\Controllers\UserController;
 use App\Models\ExitNote;
@@ -80,4 +81,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('exit-notes',ExitNoteController::class);
     Route::apiResource('entry-notes',EntryNoteController::class);
     Route::apiResource('quotations',QuotationController::class);
+    Route::apiResource('suppliers',SupplierController::class);
 });
