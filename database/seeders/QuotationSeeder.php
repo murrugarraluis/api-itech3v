@@ -19,10 +19,11 @@ class QuotationSeeder extends Seeder
             'way_to_pay' => 'Contado',
             'type_quotation' => 'Por Requerimiento',
             'document_number' => '0000011',
+            'status' => 'Usado'
         ]);
         $quotation->supplier()->associate(1)->save();
         $quotation->materials()->attach([
-            1 => ['quantity' => 5, 'price' => 1.5],
+            1 => ['quantity' => 15, 'price' => 1.99],
         ]);
 
         $quotation = Quotation::create([
@@ -30,10 +31,11 @@ class QuotationSeeder extends Seeder
             'way_to_pay' => 'Contado',
             'type_quotation' => 'Por Requerimiento',
             'document_number' => '00000AA1',
+            'status' => 'Usado'
         ]);
         $quotation->supplier()->associate(1)->save();
         $quotation->materials()->attach([
-            1 => ['quantity' => 15, 'price' => 1.5],
+            1 => ['quantity' => 10, 'price' => 2.30],
         ]);
 
         $quotation = Quotation::create([
@@ -41,10 +43,11 @@ class QuotationSeeder extends Seeder
             'way_to_pay' => 'Contado',
             'type_quotation' => 'Por Requerimiento',
             'document_number' => 'ABV000011',
+            'status' => 'Usado'
         ]);
         $quotation->supplier()->associate(1)->save();
         $quotation->materials()->attach([
-            1 => ['quantity' => 15, 'price' => 5.5],
+            1 => ['quantity' => 1, 'price' => 15.5],
         ]);
     }
 }

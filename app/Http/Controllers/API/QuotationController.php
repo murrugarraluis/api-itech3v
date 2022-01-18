@@ -32,7 +32,8 @@ class QuotationController extends Controller
             'date_agreed' => $request->date_agreed,
             'way_to_pay' => $request->way_to_pay,
             'type_quotation' => $request->type_quotation,
-            'document_number' => $request->document_number
+            'document_number' => $request->document_number,
+            'status'=>$request->status
         ]);
         foreach ($request->materials as $material) {
             

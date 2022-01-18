@@ -2,18 +2,15 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use JsonSerializable;
 
-class MaterialResource extends JsonResource
+class MaterialQuotationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param Request $request
-     * @return array|Arrayable|JsonSerializable
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -24,21 +21,10 @@ class MaterialResource extends JsonResource
             'category' => $this->category->name,
             'mark' => $this->mark->name,
             'measure_unit' => $this->measure_unit->name,
-            'minimum_stock' => $this->minimum_stock,
-            'warehouses' => WarehouseMaterialResource::collection($this->warehouses),
-            'stock' => $this->stockTotal($this->warehouses),
             'quantity' => $this->pivot ? floatval($this->pivot->quantity) : '0',
             'price' => $this->pivot ? floatval($this->pivot->price) : '0',
             'total' => $this->pivot ? floatval($this->pivot->price) * floatval($this->pivot->quantity) : '0'
         ];
-    }
-    public function stockTotal($warehouses): int
-    {
-        $suma = 0;
-        foreach ($warehouses as $warehouse){
-            $suma += $warehouse->pivot->quantity;
-        }
-        return $suma;
     }
     public function convertCode($id): string
     {

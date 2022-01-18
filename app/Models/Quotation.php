@@ -13,7 +13,7 @@ class Quotation extends Model
         'date_agreed',
         'way_to_pay',
         'type_quotation',
-        'document_number'
+        'document_number',
     ];
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     public function supplier()
@@ -22,6 +22,6 @@ class Quotation extends Model
     }
     public function materials()
     {
-        return $this->belongsToMany(Material::class)->withPivot('quantity');
+        return $this->belongsToMany(Material::class)->withPivot('quantity','price');
     }
 }

@@ -33,6 +33,7 @@ class QuotationControllerTest extends TestCase
             'way_to_pay' => 'Contado',
             'type_quotation' => 'Por Requerimiento',
             'document_number' => '0000011',
+            'status'=>'Usado'
         ]);
         $quotation->supplier()->associate($supplier->id)->save();
 
@@ -69,6 +70,7 @@ class QuotationControllerTest extends TestCase
             'way_to_pay' => 'Contado',
             'type_quotation' => 'Por Requerimiento',
             'document_number' => '0000011',
+            'status'=>'Usado'
         ]);
         $quotation->supplier()->associate($supplier->id)->save();
 
@@ -159,6 +161,7 @@ class QuotationControllerTest extends TestCase
             'way_to_pay' => 'Contado',
             'type_quotation' => 'Por Requerimiento',
             'document_number' => '0000011',
+            'status'=>'Usado'
         ]);
         $quotation->supplier()->associate($supplier->id)->save();
 

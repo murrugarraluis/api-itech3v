@@ -20,6 +20,7 @@ class CreateQuotationsTable extends Migration
             $table->string('way_to_pay');
             $table->string('type_quotation');
             $table->string('document_number')->nullable();
+            $table->string('status')->default('Cotizado');
             $table->timestamps();
             $table->softDeletes();
         });
