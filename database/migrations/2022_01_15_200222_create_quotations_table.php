@@ -19,7 +19,7 @@ class CreateQuotationsTable extends Migration
             $table->date('date_agreed');
             $table->string('way_to_pay');
             $table->string('type_quotation');
-            $table->string('document_number')->nullable();
+            $table->foreignId('request_id')->nullable()->constrained('requests');
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

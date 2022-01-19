@@ -21,6 +21,10 @@ class Quotation extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+    public function request()
+    {
+        return $this->belongsTo(Request::class);
+    }
     public function materials()
     {
         return $this->belongsToMany(Material::class)->withPivot('quantity','price');

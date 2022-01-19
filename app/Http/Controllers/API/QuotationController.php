@@ -32,7 +32,6 @@ class QuotationController extends Controller
             'date_agreed' => $request->date_agreed,
             'way_to_pay' => $request->way_to_pay,
             'type_quotation' => $request->type_quotation,
-            'document_number' => $request->document_number,
             'status'=>'Cotizado'
         ]);
         foreach ($request->materials as $material) {
@@ -44,6 +43,9 @@ class QuotationController extends Controller
             $quotation->materials()->attach($material_id, ['quantity' => $material_quantity,'price' => $material_price ]);
         }
         $quotation->supplier()->associate($request->supplier)->save();
+        if ($request->document_number) {
+            $quotation->request()->associate($request->document_number)->save();
+        }
         return (new QuotationResource($quotation))->additional(['message' => 'Cotizacion Registrada']);
     
     }
