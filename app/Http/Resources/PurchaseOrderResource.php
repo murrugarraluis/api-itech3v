@@ -24,7 +24,7 @@ class PurchaseOrderResource extends JsonResource
             'date_agreed' => $this->date_agreed,
             'importance' => $this->importance,
             'type_purchase_order' => $this->type_purchase_order,
-            'document_number' => $this->document_number,
+            'document_number' => $this->quotation ? $this->quotation->id : '',
             'materials' => MaterialQuotationResource::collection($this->materials),
             'status' => $this->status,
             'total_amount'=> $this->totalAmount($this->materials)

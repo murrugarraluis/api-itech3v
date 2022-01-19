@@ -31,7 +31,6 @@ class PurchaseOrderController extends Controller
             'date_agreed' => $request->date_agreed,
             'importance' => $request->importance,
             'type_purchase_order' => $request->type_purchase_order,
-            'document_number' => $request->document_number,
             'status'=>'Usado'
         ]);
         foreach ($request->materials as $material) {
@@ -43,6 +42,9 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->materials()->attach($material_id, ['quantity' => $material_quantity,'price' => $material_price ]);
         }
         $purchaseOrder->supplier()->associate($request->supplier)->save();
+        if ($request->document_number) {
+            $purchaseOrder->quotation()->associate($request->document_number)->save();
+        }
         return (new PurchaseOrderResource($purchaseOrder))->additional(['message' => 'Orden de Compra Registrada']);
     }
 

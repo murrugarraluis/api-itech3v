@@ -20,7 +20,7 @@ class CreatePurchaseOrdersTable extends Migration
             $table->date('date_agreed');
             $table->string('importance');
             $table->string('type_purchase_order');
-            $table->string('document_number')->nullable();
+            $table->foreignId('quotation_id')->nullable()->constrained('quotations');
             $table->string('status');
             $table->timestamps();
             $table->softDeletes();

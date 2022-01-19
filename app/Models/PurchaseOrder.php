@@ -22,6 +22,10 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+    public function quotation()
+    {
+        return $this->belongsTo(Quotation::class);
+    }
     public function materials()
     {
         return $this->belongsToMany(Material::class)->withPivot('quantity','price');

@@ -7,6 +7,7 @@ use App\Models\Mark;
 use App\Models\Material;
 use App\Models\MeasureUnit;
 use App\Models\PurchaseOrder;
+use App\Models\Quotation;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Models\Warehouse;
@@ -27,15 +28,21 @@ class PurchaseOrderControllerTest extends TestCase
             'name'=>'Luis',
             'lastname'=>'Murrugarra',
         ]);
-        $quotation = PurchaseOrder::factory()->create([
+        $purchaseOrder = PurchaseOrder::factory()->create([
             'date_required' => '2022-01-05',
             'date_agreed' => '2022-01-05',
             'importance' => 'Media',
             'type_purchase_order' => 'Por Cotizacion',
-            'document_number' => '0000011',
             'status'=>'Solicitado'
         ]);
-        $quotation->supplier()->associate($supplier->id)->save();
+        $quotation = Quotation::create([
+            'date_agreed' => '2022-01-05',
+            'way_to_pay' => 'Contado',
+            'type_quotation' => 'Por Requerimiento',
+            'status' => 'Usado'
+        ]);
+        $purchaseOrder->supplier()->associate($supplier->id)->save();
+        $purchaseOrder->quotation()->associate($quotation->id)->save();
 
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -47,7 +54,7 @@ class PurchaseOrderControllerTest extends TestCase
         $Material->measure_unit()->associate($MeasureUnit)->save();
 
         //        Agregar Producto al detalle de Requerimiento
-        $quotation->materials()->attach([
+        $purchaseOrder->materials()->attach([
             1 => ['quantity' => 5, 'price' => 1.5],
         ]);
 
@@ -65,16 +72,21 @@ class PurchaseOrderControllerTest extends TestCase
             'name'=>'Luis',
             'lastname'=>'Murrugarra',
         ]);
-        $quotation = PurchaseOrder::factory()->create([
+        $purchaseOrder = PurchaseOrder::factory()->create([
             'date_required' => '2022-01-05',
             'date_agreed' => '2022-01-05',
             'importance' => 'Media',
             'type_purchase_order' => 'Por Cotizacion',
-            'document_number' => '0000011',
             'status'=>'Solicitado'
         ]);
-        $quotation->supplier()->associate($supplier->id)->save();
-
+        $quotation = Quotation::create([
+            'date_agreed' => '2022-01-05',
+            'way_to_pay' => 'Contado',
+            'type_quotation' => 'Por Requerimiento',
+            'status' => 'Usado'
+        ]);
+        $purchaseOrder->supplier()->associate($supplier->id)->save();
+        $purchaseOrder->quotation()->associate($quotation->id)->save();
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
         $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
@@ -85,12 +97,12 @@ class PurchaseOrderControllerTest extends TestCase
         $Material->measure_unit()->associate($MeasureUnit)->save();
 
         //        Agregar Producto al detalle de Requerimiento
-        $quotation->materials()->attach([
+        $purchaseOrder->materials()->attach([
             1 => ['quantity' => 5, 'price' => 1.5],
         ]);
 
         $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
-        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$quotation->id")
+        $this->actingAs($user)->withSession(['banned' => false])->getJson("api/$this->uri/$purchaseOrder->id")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }
@@ -132,14 +144,20 @@ class PurchaseOrderControllerTest extends TestCase
         // $quotation->materials()->attach([
         //     1 => ['quantity' => 5, 'price' => 1.5],
         // ]);
+        $quotation = Quotation::create([
+            'date_agreed' => '2022-01-05',
+            'way_to_pay' => 'Contado',
+            'type_quotation' => 'Por Requerimiento',
+            'status' => 'Usado'
+        ]);
         $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
         $json = [
             'supplier' => $supplier->id,
             'date_required' => '2022-01-05',
             'date_agreed' => '2022-01-05',
             'importance' => 'Contado',
-            'type_purchase_order' => 'Por Requerimiento',
-            'document_number' => '0111',
+            'type_purchase_order' => 'Por Cotizacion',
+            'document_number' => $quotation->id,
             'materials' => [['id' => 1, 'quantity' => 5,'price' =>2.5], ['id' => 2, 'quantity' => 3,'price' =>2.5]]
         ];
         $this->actingAs($user)->withSession(['banned' => false])->postJson("api/$this->uri", $json)
@@ -155,15 +173,21 @@ class PurchaseOrderControllerTest extends TestCase
             'name'=>'Luis',
             'lastname'=>'Murrugarra',
         ]);
-        $quotation = PurchaseOrder::factory()->create([
+        $purchaseOrder = PurchaseOrder::factory()->create([
             'date_required' => '2022-01-05',
             'date_agreed' => '2022-01-05',
             'importance' => 'Media',
             'type_purchase_order' => 'Por Cotizacion',
-            'document_number' => '0000011',
             'status'=>'Solicitado'
         ]);
-        $quotation->supplier()->associate($supplier->id)->save();
+        $quotation = Quotation::create([
+            'date_agreed' => '2022-01-05',
+            'way_to_pay' => 'Contado',
+            'type_quotation' => 'Por Requerimiento',
+            'status' => 'Usado'
+        ]);
+        $purchaseOrder->supplier()->associate($supplier->id)->save();
+        $purchaseOrder->quotation()->associate($quotation->id)->save();
 
         $Category = Category::factory()->create(['name' => 'Camaras']);
         $Mark = Mark::factory()->create(['name' => 'Vision']);
@@ -175,16 +199,16 @@ class PurchaseOrderControllerTest extends TestCase
         $Material->measure_unit()->associate($MeasureUnit)->save();
 
         //        Agregar Producto al detalle de Requerimiento
-        $quotation->materials()->attach([
+        $purchaseOrder->materials()->attach([
             1 => ['quantity' => 5, 'price' => 1.5],
         ]);
 
         $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
-        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/$quotation->id", [])
+        $this->actingAs($user)->withSession(['banned' => false])->deleteJson("api/$this->uri/$purchaseOrder->id", [])
             ->assertStatus(200)
             ->assertJson(['message' => 'Orden de Compra Eliminada']);
         $this->assertDatabaseMissing("$this->table", [
-            'id' => $quotation->id,
+            'id' => $purchaseOrder->id,
             'deleted_at' => null
         ]);
     }
