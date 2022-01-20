@@ -12,13 +12,13 @@ use App\Http\Controllers\API\{
     AuthenticationController,
     EntryNoteController,
     ExitNoteController,
+    PurchaseController,
     QuotationController,
-    SupplierController
+    SupplierController,
+    PurchaseOrderController
 };
-use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\UserController;
-use App\Models\ExitNote;
-use App\Models\Quotation;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,4 +84,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('quotations',QuotationController::class);
     Route::apiResource('suppliers',SupplierController::class);
     Route::apiResource('purchase-orders',PurchaseOrderController::class);
+    Route::apiResource('purchases',PurchaseController::class);
 });
