@@ -25,6 +25,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RequestSeeder::class);
         $this->call(ExitNoteSeeder::class);
         $this->call(EntryNoteSeeder::class);
+        $this->call(SupplierSeeder::class);
+        $this->call(QuotationSeeder::class);
+        $this->call(PurchaseOrderSeeder::class);
+        $this->call(PurchaseSeeder::class);
 
     }
 }

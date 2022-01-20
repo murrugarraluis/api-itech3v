@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MaterialRequestResource extends JsonResource
+class SupplierResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,19 +17,18 @@ class MaterialRequestResource extends JsonResource
         return [
             'id' => $this->id,
             'code' => $this->convertCode($this->id),
+            'type_document' => $this->type_document,
+            'number_document' => $this->number_document,
             'name' => $this->name,
-            'category' => $this->category->name,
-            'mark' => $this->mark->name,
-            'measure_unit' => $this->measure_unit->name,
-            'quantity'=>$this->pivot? $this->pivot->quantity : '0',
-            'price'=>'0'
+            'lastname' => $this->lastname,
+            'fullname' => $this->name . ' ' . $this->lastname
         ];
     }
     public function convertCode($id): string
     {
-        $prefijo = "MAT";
-        $nroDigist = 5;
-        $digits = '00000';
+        $prefijo = "PRO";
+        $nroDigist = 4;
+        $digits = '0000';
         $number = substr($digits, 0, $nroDigist - strlen($id)) . $id;
         return $prefijo . "-" . $number;
     }

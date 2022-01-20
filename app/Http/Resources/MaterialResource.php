@@ -27,6 +27,9 @@ class MaterialResource extends JsonResource
             'minimum_stock' => $this->minimum_stock,
             'warehouses' => WarehouseMaterialResource::collection($this->warehouses),
             'stock' => $this->stockTotal($this->warehouses),
+            'quantity' => $this->pivot ? floatval($this->pivot->quantity) : '0',
+            'price' => $this->pivot ? floatval($this->pivot->price) : '0',
+            'total' => $this->pivot ? floatval($this->pivot->price) * floatval($this->pivot->quantity) : '0'
         ];
     }
     public function stockTotal($warehouses): int

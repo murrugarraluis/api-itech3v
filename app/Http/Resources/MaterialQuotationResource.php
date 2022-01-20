@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MaterialRequestResource extends JsonResource
+class MaterialQuotationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,8 +21,9 @@ class MaterialRequestResource extends JsonResource
             'category' => $this->category->name,
             'mark' => $this->mark->name,
             'measure_unit' => $this->measure_unit->name,
-            'quantity'=>$this->pivot? $this->pivot->quantity : '0',
-            'price'=>'0'
+            'quantity' => $this->pivot ? floatval($this->pivot->quantity) : '0',
+            'price' => $this->pivot ? floatval($this->pivot->price) : '0',
+            'total' => $this->pivot ? floatval($this->pivot->price) * floatval($this->pivot->quantity) : '0'
         ];
     }
     public function convertCode($id): string
