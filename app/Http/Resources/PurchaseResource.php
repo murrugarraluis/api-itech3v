@@ -21,10 +21,10 @@ class PurchaseResource extends JsonResource
             'supplier' => $this->supplier->id,
             'supplier_fullname' => $this->supplier->name . '' . $this->supplier->lastname,
             'way_to_pay' => $this->way_to_pay,
+            'type_document' => $this->type_document,
             'number' => $this->number,
             'type_purchase' => $this->type_purchase,
-            'type_purchase_order' => $this->type_purchase_order,
-            'document_number' => $this->quotation ? $this->quotation->id : '',
+            'document_number' => $this->purchase_order ? $this->purchase_order->id : '',
             'materials' => MaterialQuotationResource::collection($this->materials),
             'status' => $this->status,
             'total_amount' => $this->totalAmount($this->materials)
