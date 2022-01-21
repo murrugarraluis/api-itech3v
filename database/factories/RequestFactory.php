@@ -13,8 +13,17 @@ class RequestFactory extends Factory
      */
     public function definition()
     {
+        $type_request = ['Para Marketing','Para Ventas','Para Contabilidad','Para Genrencia','Para Logistica'];
+        $importance = ['Baja','Media','Alta'];
+        $status = ['Confirmado' , 'Pendiente'];
         return [
-            //
+            'date_required' => $this->faker->dateTimeBetween('-1 years', 'now'),
+            'type_request' => $this->faker->randomElement($type_request),
+            'importance' => $this->faker->randomElement($importance),
+            'comment' => '',
+            'status'=>$this->faker->randomElement($status),
+            'status_message'=>'Enviado a Logistica',
+            // 'user_id'=>$this->faker->numberBetween(1,4)
         ];
     }
 }
