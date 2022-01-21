@@ -27,6 +27,14 @@ class RequestController extends Controller
             $requests = RequestC::where('status_message', $request->status_message)->get();
             return RequestResource::collection($requests);
         }
+        if ($request->status && $request->type_request && $request->date_min && $request->date_max) {
+            $requests = RequestC::where('status', $request->status)
+            ->where('type_request', $request->type_request)
+            ->whereBetween('date_required',[$request->date_min,$request->date_max])
+            ->get();
+
+            return RequestResource::collection($requests);
+        }
         return RequestResource::collection(RequestC::all());
     }
 

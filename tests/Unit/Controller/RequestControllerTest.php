@@ -17,6 +17,36 @@ class RequestControllerTest extends TestCase
     use RefreshDatabase;
 
     private $uri = 'requests';
+    public function test_index_report()
+    {
+        $this->withExceptionHandling();
+        $Request = Request::factory()->create([
+            'date_required' => '2022-01-05',
+            'type_request' => 'Para Operaciones',
+            'importance' => 'Media',
+            'comment' => '',
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Almacen'
+        ]);
+        $Category = Category::factory()->create(['name' => 'Camaras']);
+        $Mark = Mark::factory()->create(['name' => 'Vision']);
+        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+        //        Asociar Datos de Material
+        $Material->category()->associate($Category)->save();
+        $Material->mark()->associate($Mark)->save();
+        $Material->measure_unit()->associate($MeasureUnit)->save();
+        //        Agregar Producto al detalle de Requerimiento
+        $Request->materials()->attach([
+            1 => ['quantity' => 5],
+        ]);
+
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $r = $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/$this->uri?status=Pendiente && type_request=Para Marketing && date_min=2021-08-19 && date_max=2022-08-19")
+            ->assertStatus(200)
+            ->assertJson(['data' => []]);
+    }
     public function test_index()
     {
         $this->withExceptionHandling();
@@ -171,7 +201,7 @@ class RequestControllerTest extends TestCase
             ->assertJson(['data' => []])
             ->assertJson(['message' => 'Requerimiento Satisfecho']);
     }
-    public function test_evaluate_request_exceed_amount ()
+    public function test_evaluate_request_exceed_amount()
     {
         //        $this->withExceptionHandling();
         $Request = Request::factory()->create([
