@@ -21,8 +21,24 @@ class RequestControllerTest extends TestCase
     {
         $this->withExceptionHandling();
         $Request = Request::factory()->create([
-            'date_required' => '2022-01-05',
-            'type_request' => 'Para Operaciones',
+            'date_required' => '2021-12-05',
+            'type_request' => 'Para Marketing',
+            'importance' => 'Media',
+            'comment' => '',
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Almacen'
+        ]);
+        $Request = Request::factory()->create([
+            'date_required' => '2022-01-01',
+            'type_request' => 'Para Marketing',
+            'importance' => 'Media',
+            'comment' => '',
+            'status' => 'Pendiente',
+            'status_message' => 'Enviado a Almacen'
+        ]);
+        $Request = Request::factory()->create([
+            'date_required' => '2022-01-02',
+            'type_request' => 'Para Marketing',
             'importance' => 'Media',
             'comment' => '',
             'status' => 'Pendiente',
@@ -43,7 +59,7 @@ class RequestControllerTest extends TestCase
 
         $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
         $r = $this->actingAs($user)->withSession(['banned' => false])
-            ->getJson("api/$this->uri?status=Pendiente && type_request=Para Marketing && date_min=2021-08-19 && date_max=2022-08-19")
+            ->getJson("api/$this->uri?status=Pendiente && type_request=Para Marketing && date_min=2021-10-01 && date_max=2022-01-20")
             ->assertStatus(200)
             ->assertJson(['data' => []]);
     }

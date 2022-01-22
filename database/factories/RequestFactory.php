@@ -13,7 +13,7 @@ class RequestFactory extends Factory
      */
     public function definition()
     {
-        $type_request = ['Para Marketing','Para Ventas','Para Contabilidad','Para Genrencia','Para Logistica'];
+        $type_request = ['Para Marketing','Para Ventas','Para Contabilidad','Para Gerencia','Para Logistica','Para Almacen'];
         $importance = ['Baja','Media','Alta'];
         $status = ['Confirmado' , 'Pendiente'];
         return [
