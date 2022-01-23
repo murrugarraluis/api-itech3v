@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Material;
 use App\Models\Request;
 use Illuminate\Database\Seeder;
+
 
 class RequestSeeder extends Seeder
 {
@@ -14,53 +16,12 @@ class RequestSeeder extends Seeder
      */
     public function run()
     {
-        $Request = Request::create([
-            'date_required' => '2022-01-05',
-            'type_request' => 'Para Marketing',
-            'importance' => 'Media',
-            'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
-        ]);
-        $Request->materials()->attach([
-                1 => ['quantity' =>5],
-                2 => ['quantity' => 6],
-        ]);
-
-        $Request->user()->associate(4)->save();
-
-        $Request = Request::create([
-            'date_required' => '2022-01-02',
-            'type_request' => 'Para Marketing',
-            'importance' => 'Alta',
-            'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
-        ]);
-
-
-        $Request->materials()->attach([
-            1 => ['quantity' =>50],
-            2 => ['quantity' => 4],
-        ]);
-
-        $Request->user()->associate(4)->save();
-
-        $Request = Request::create([
-            'date_required' => '2022-01-25',
-            'type_request' => 'Para Gerencia',
-            'importance' => 'Baja',
-            'comment' => '',
-            'status'=>'Pendiente',
-            'status_message'=>'Enviado a Logistica'
-        ]);
-        $Request->materials()->attach([
-            1 => ['quantity' =>2],
-            2 => ['quantity' => 4],
-            3 => ['quantity' =>1],
-            4 => ['quantity' => 4],
-        ]);
-
-        $Request->user()->associate(1)->save();
+        Request::factory(1000)->create()->each(function ($request) {
+            $request->user()->associate(rand(1, 4))->save();
+            $request->materials()->attach([
+                rand(1,4) => ['quantity' => rand(5,15)],
+                rand(1,4) => ['quantity' => rand(5,15)],
+            ]);
+        });
     }
 }
