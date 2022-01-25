@@ -17,7 +17,7 @@ class PurchaseSeeder extends Seeder
 
         Purchase::factory(1000)->create()->each(function ($purchase)
         {
-            $purchase->supplier()->associate(rand(1,12))->save();
+            $purchase->supplier()->associate(rand(1,5))->save();
             $purchase->materials()->attach([
                 rand(1,4) => ['quantity' => rand(2,8), 'price' => rand(1,100)],
                 rand(1,4) => ['quantity' => rand(2,8), 'price' => rand(1,100)],
