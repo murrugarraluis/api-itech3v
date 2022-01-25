@@ -19,6 +19,53 @@ class PurchaseControllerTest extends TestCase
     use RefreshDatabase;
     private $uri = 'purchases';
     private $table = 'purchases';
+    public function test_index_report()
+    {
+        $this->withExceptionHandling();
+        $supplier = Supplier::factory()->create([
+            'type_document' => 'DNI',
+            'number_document' => '75579609',
+            'name' => 'Luis',
+            'lastname' => 'Murrugarra',
+        ]);
+        $purchase = Purchase::factory()->create([
+            'date_required' => '2022-01-01',
+            'way_to_pay' => 'Contado',
+            'type_document' => 'Boleta',
+            'number' => 'B001-0001',
+            'type_purchase' => 'Por Orden de Compra',
+            'status' => 'Ingresado'
+        ]);
+        $purchaseOrder = PurchaseOrder::create([
+            'date_required' => '2022-01-05',
+            'date_agreed' => '2022-01-05',
+            'importance' => 'Media',
+            'type_purchase_order' => 'Por Cotizacion',
+            'status' => 'Usado'
+        ]);
+        $purchase->supplier()->associate($supplier->id)->save();
+        $purchase->purchase_order()->associate($purchaseOrder->id)->save();
+
+        $Category = Category::factory()->create(['name' => 'Camaras']);
+        $Mark = Mark::factory()->create(['name' => 'Vision']);
+        $MeasureUnit = MeasureUnit::factory()->create(['name' => 'Caja']);
+        $Material = Material::factory()->create(['name' => 'Camara QHD ZX-77HF', 'minimum_stock' => 5]);
+        //        Asociar Datos de Material
+        $Material->category()->associate($Category)->save();
+        $Material->mark()->associate($Mark)->save();
+        $Material->measure_unit()->associate($MeasureUnit)->save();
+
+        //        Agregar Producto al detalle de Requerimiento
+        $purchase->materials()->attach([
+            1 => ['quantity' => 5, 'price' => 1.5],
+        ]);
+
+        $user = User::factory()->create(['name' => 'Luis', 'email' => 'Luis@gmail.com', 'password' => bcrypt('123456')]);
+        $this->actingAs($user)->withSession(['banned' => false])
+            ->getJson("api/$this->uri?date_min=2021-10-01 && date_max=2022-01-20")
+            ->assertStatus(200)
+            ->assertJson(['data' => []]);
+    }
     public function test_index()
     {
         $this->withExceptionHandling();
