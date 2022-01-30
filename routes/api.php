@@ -87,4 +87,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('purchase-orders', PurchaseOrderController::class);
 });
 Route::apiResource('purchases', PurchaseController::class);
-Route::post('upload-file', [UploadController::class, 'uploadFile']);
+Route::post('upload-file', [UploadController::class, 'uploadFile2']);

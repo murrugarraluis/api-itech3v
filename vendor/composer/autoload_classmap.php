@@ -20,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\API\\QuotationController' => $baseDir . '/app/Http/Controllers/API/QuotationController.php',
     'App\\Http\\Controllers\\API\\RequestController' => $baseDir . '/app/Http/Controllers/API/RequestController.php',
     'App\\Http\\Controllers\\API\\SupplierController' => $baseDir . '/app/Http/Controllers/API/SupplierController.php',
+    'App\\Http\\Controllers\\API\\UploadController' => $baseDir . '/app/Http/Controllers/API/UploadController.php',
     'App\\Http\\Controllers\\API\\WarehouseController' => $baseDir . '/app/Http/Controllers/API/WarehouseController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\UserController' => $baseDir . '/app/Http/Controllers/UserController.php',

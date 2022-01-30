@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\File;
 use Illuminate\Http\Request;
 
 class UploadController extends Controller
@@ -24,5 +25,15 @@ class UploadController extends Controller
             return response()->json(['message' => 'File Upload']);
         }
         return response()->json(['message' => 'File Not Upload']);
+    }
+    public function uploadFile2(Request $request)
+    {
+        $file = File::create($request->all());
+        //$path = $request->file->store('public/files');
+
+        $path = $request->file->storeAs('public/files', 'ayuda.pdf');
+        $file->file = $path;
+        $file->save();
+        return response()->json(['message' => 'File Upload']);
     }
 }
