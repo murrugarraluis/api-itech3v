@@ -14,8 +14,11 @@ class MarkSeeder extends Seeder
      */
     public function run()
     {
+        Mark::create(['name'=>'ezviz']);
         Mark::create(['name'=>'kingston']);
         Mark::create(['name'=>'Lenovo']);
+        Mark::create(['name'=>'Epson']);
+        Mark::create(['name'=>'Constructor']);
 
     }
 }

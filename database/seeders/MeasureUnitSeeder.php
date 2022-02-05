@@ -14,6 +14,7 @@ class MeasureUnitSeeder extends Seeder
      */
     public function run()
     {
+        MeasureUnit::create(['name'=>'Unidades']);
         MeasureUnit::create(['name'=>'Cajas']);
         MeasureUnit::create(['name'=>'Kilos']);
     }

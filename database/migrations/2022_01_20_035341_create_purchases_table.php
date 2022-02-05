@@ -16,6 +16,7 @@ class CreatePurchasesTable extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
+            $table->date('date_required')->nullable();
             $table->string('way_to_pay');
             $table->string('type_document');
             $table->string('number');

@@ -18,6 +18,9 @@ class CategorySeeder extends Seeder
         Category::create(['name'=>'Discos Duros']);
         Category::create(['name'=>'Teclados']);
         Category::create(['name'=>"Usb's"]);
+        Category::create(['name'=>"Tintas"]);
+        Category::create(['name'=>"Guantes"]);
+        Category::create(['name'=>"Cascos"]);
 
     }
 }
