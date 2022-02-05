@@ -536,6 +536,7 @@ class ComposerStaticInit01e917da3f3177d4979ea0c833a17e01
         'App\\Http\\Controllers\\API\\QuotationController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/QuotationController.php',
         'App\\Http\\Controllers\\API\\RequestController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/RequestController.php',
         'App\\Http\\Controllers\\API\\SupplierController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/SupplierController.php',
+        'App\\Http\\Controllers\\API\\UploadController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/UploadController.php',
         'App\\Http\\Controllers\\API\\WarehouseController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/WarehouseController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',

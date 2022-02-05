@@ -15,7 +15,8 @@ use App\Http\Controllers\API\{
     PurchaseController,
     QuotationController,
     SupplierController,
-    PurchaseOrderController
+    PurchaseOrderController,
+    UploadController
 };
 use App\Http\Controllers\UserController;
 
@@ -75,14 +76,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('requests/{request}/evaluate', [RequestController::class, 'evaluate']);
     Route::patch('requests/{request}/change-status', [RequestController::class, 'changeStatus']);
     Route::apiResource('requests', RequestController::class);
-    
-    
+
+
     Route::get('users/{user}/requests', [UserController::class, 'showRequests']);
 
-    Route::apiResource('exit-notes',ExitNoteController::class);
-    Route::apiResource('entry-notes',EntryNoteController::class);
-    Route::apiResource('quotations',QuotationController::class);
-    Route::apiResource('suppliers',SupplierController::class);
-    Route::apiResource('purchase-orders',PurchaseOrderController::class);
-    Route::apiResource('purchases',PurchaseController::class);
+    Route::apiResource('exit-notes', ExitNoteController::class);
+    Route::apiResource('entry-notes', EntryNoteController::class);
+    Route::apiResource('quotations', QuotationController::class);
+    Route::apiResource('suppliers', SupplierController::class);
+    Route::apiResource('purchase-orders', PurchaseOrderController::class);
 });
+Route::apiResource('purchases', PurchaseController::class);
+Route::post('upload-file', [UploadController::class, 'uploadFile2']);
+Route::get('files/{file}', [UploadController::class, 'getFile']);

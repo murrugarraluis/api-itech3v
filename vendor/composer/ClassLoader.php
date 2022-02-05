@@ -90,6 +90,13 @@ class ClassLoader
         return $this->fallbackDirsPsr4;
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * @return string[] Array of classname => path
+     * @psalm-return array<string, string>
+     */
+>>>>>>> c4abe4a2a509a43cdd74671cf029abef28bef3d3
     public function getClassMap()
     {
         return $this->classMap;
